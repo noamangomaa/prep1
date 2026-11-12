@@ -138,6 +138,11 @@ textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10
       <input type="text" id="stName" placeholder="اسم الطالبة" maxlength="40" class="hide" style="margin-top:10px">
       <button class="back tiny" id="notMe" style="margin:8px 0 0">مش نورين؟ غيّري الاسم</button>
     </div>
+    <div class="card share hide" id="resumeCard">
+      <h3>⏸️ عندك امتحان لسه ما خلصش</h3>
+      <p class="muted tiny" id="resumeInfo" style="margin:0 0 10px"></p>
+      <div class="row"><button class="btn" id="resumeBtn">كمّلي من مكانك</button><button class="btn plain" id="resumeDrop">ابدئي من جديد</button></div>
+    </div>
     <div class="card">
       <h3>اختاري المادة</h3>
       <div class="subjects" id="subjGrid"></div>
@@ -172,7 +177,7 @@ textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10
         </div>
       </div>
     </div>
-    <button class="btn plain" id="btnQuit" style="font-size:13px">إنهاء والرجوع</button>
+    <button class="btn plain" id="btnQuit" style="font-size:13px">⏸️ وقفي وكمّلي بعدين</button>
   </section>
 
   <!-- RESULT -->
@@ -316,6 +321,7 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const GREET=['يلا نذاكر سوا النهارده 💪','كل يوم شوية تدريب وهتبقي بطلة 🌟','اختاري المادة وابدئي، إنتِ قدها 👏','جاهزة للتحدي؟ 🚀'];
 function paintHello(){ $('#hello').textContent=`أهلاً يا ${first()}! 👋`; $('#helloSub').textContent=pick(GREET); }
 paintHello();
+setTimeout(paintResume,0);
 $('#notMe').onclick=()=>{ $('#stName').classList.remove('hide'); $('#notMe').classList.add('hide'); $('#stName').focus(); };
 $('#stName').oninput=()=>{ $('#hello').textContent=`أهلاً يا ${first()}! 👋`; };
 let curSubj=null;
@@ -339,6 +345,25 @@ $('#backHome').onclick=()=>show('vHome');
 
 /* ---------- quiz ---------- */
 let S=null, lastResult=null;
+const PKEY='mp1_progress';
+function saveProgress(){ if(!S) return; LS.set(PKEY,{mode:S.mode,name:S.name,practice:S.practice,i:S.i,t0:S.t0,saved:Date.now(),
+  items:S.items.map(it=>({id:it.q.id,order:it.order,ans:it.ans,checked:it.checked}))}); }
+function clearProgress(){ try{localStorage.removeItem(PKEY)}catch(e){} }
+function loadProgress(){ const p=LS.get(PKEY,null); if(!p||!Array.isArray(p.items)||!p.items.length) return null;
+  if(Date.now()-(p.saved||0)>14*864e5){clearProgress();return null;}
+  const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q])); if(!p.items.every(x=>qmap[x.id])){clearProgress();return null;}
+  return p; }
+function paintResume(){ const p=loadProgress(), card=$('#resumeCard'); if(!p){card.classList.add('hide');return;}
+  const done=p.items.filter(x=>x.ans!=null&&x.ans!=='').length;
+  $('#resumeInfo').textContent=`${modeName(p.mode)} · جاوبتي ${done} من ${p.items.length} سؤال`;
+  card.classList.remove('hide'); }
+function resume(){ const p=loadProgress(); if(!p) return; const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+  S={mode:p.mode,name:p.name,first:String(p.name).split(/\s+/)[0],practice:p.practice,i:Math.min(p.i||0,p.items.length-1),t0:p.t0||Date.now(),
+     items:p.items.map(x=>({q:qmap[x.id],order:x.order,ans:x.ans,checked:!!x.checked}))};
+  curSubj = p.practice ? LMAP[qmap[p.items[0].id].l].subject : String(p.mode).split(':')[0];
+  show('vQuiz'); renderQ(); }
+$('#resumeBtn').onclick=resume;
+$('#resumeDrop').onclick=()=>{clearProgress();paintResume();};
 function start(mode){
   const name=needName(); if(!name){ show('vHome'); return; }
   let qs;
@@ -348,7 +373,7 @@ function start(mode){
   curSubj = practice ? LMAP[mode.slice(2)].subject : mode.split(':')[0];
   qs = practice ? shuffle(qs) : qs.slice();
   S={mode,name,first:name.split(/\s+/)[0],practice,i:0,items:qs.map(q=>({q,order:q.t==='mcq'?shuffle(q.o.map((_,k)=>k)):null,ans:null,checked:false})),t0:Date.now()};
-  show('vQuiz'); renderQ();
+  saveProgress(); show('vQuiz'); renderQ();
 }
 function renderQ(){
   const it=S.items[S.i], q=it.q, l=LMAP[q.l];
@@ -363,10 +388,10 @@ function renderQ(){
       if(locked){ if(k===q.a) cls='opt right'; else if(it.ans===k) cls='opt wrong'; }
       return `<button class="${cls}" data-k="${k}" ${locked?'disabled':''}><span class="k">${'abcd'[pos]}</span><span>${esc(q.o[k])}</span></button>`;
     }).join('')+'</div>';
-    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ it.ans=+b.dataset.k; renderQ(); });
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ it.ans=+b.dataset.k; saveProgress(); renderQ(); });
   } else {
     $('#qBody').innerHTML=`<input type="text" inputmode="decimal" class="numin" id="numIn" placeholder="Your answer" ${locked?'disabled':''} value="${esc(it.ans??'')}"><div class="hint">اكتبي الرقم بس (ممكن سالب أو عشري زي 13.5 أو كسر زي 3/4)</div>`;
-    const inp=$('#numIn'); inp.oninput=()=>{it.ans=inp.value; updateBtns();}; inp.onkeydown=e=>{if(e.key==='Enter'){ if(S.practice&&!it.checked) check(); else next(); }};
+    const inp=$('#numIn'); inp.oninput=()=>{it.ans=inp.value; saveProgress(); updateBtns();}; inp.onkeydown=e=>{if(e.key==='Enter'){ if(S.practice&&!it.checked) check(); else next(); }};
     if(!locked) setTimeout(()=>inp.focus(),30);
   }
   const fb=$('#qFeedback');
@@ -385,19 +410,19 @@ function updateBtns(){
   else { $('#btnCheck').classList.add('hide'); $('#btnNext').classList.remove('hide'); }
   $('#btnNext').textContent= last ? 'إنهاء وعرض النتيجة' : (hasAns||S.practice ? 'التالي' : 'تخطّي');
 }
-function check(){ const it=S.items[S.i]; if(it.ans==null||it.ans==='') return; it.checked=true; renderQ(); }
-function next(){ if(S.i<S.items.length-1){S.i++;renderQ();} else finish(); }
+function check(){ const it=S.items[S.i]; if(it.ans==null||it.ans==='') return; it.checked=true; saveProgress(); renderQ(); }
+function next(){ if(S.i<S.items.length-1){S.i++;saveProgress();renderQ();} else finish(); }
 $('#btnCheck').onclick=check;
 $('#btnNext').onclick=next;
-$('#btnPrev').onclick=()=>{ if(S.i>0){S.i--;renderQ();} };
-$('#btnQuit').onclick=()=>{ const answered=S.items.filter(x=>x.ans!=null&&x.ans!=='').length; if(answered===0){curSubj?openSubject(curSubj):show('vHome');return;} $('#btnQuit').textContent= $('#btnQuit').dataset.c ? 'إنهاء والرجوع' : 'اضغطي تاني عشان تخرجي بدون حفظ'; if($('#btnQuit').dataset.c){delete $('#btnQuit').dataset.c; curSubj?openSubject(curSubj):show('vHome');} else $('#btnQuit').dataset.c='1'; };
+$('#btnPrev').onclick=()=>{ if(S.i>0){S.i--;saveProgress();renderQ();} };
+$('#btnQuit').onclick=()=>{ const answered=S.items.filter(x=>x.ans!=null&&x.ans!=='').length; if(answered===0){clearProgress();} else saveProgress(); paintResume(); show('vHome'); };
 
 async function finish(){
   const per={}; const wrong=[]; let correct=0;
   S.items.forEach(it=>{ const q=it.q; per[q.l]=per[q.l]||{c:0,t:0}; per[q.l].t++; const ok=isRight(q,it.ans); if(ok){per[q.l].c++;correct++;} else wrong.push({id:q.id,ans:it.ans==null?'':(q.t==='mcq'?q.o[it.ans]:String(it.ans))}); });
   const a={id:'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:S.name, mode:S.mode, ts:new Date().toISOString(),
     total:S.items.length, correct, pct:Math.round(correct/S.items.length*100), perLesson:per, wrong, minutes:Math.max(1,Math.round((Date.now()-S.t0)/60000))};
-  lastResult=a; renderResult(a); show('vResult');
+  clearProgress(); lastResult=a; renderResult(a); show('vResult');
   await store.saveAttempt(a);
 }
 
@@ -466,7 +491,7 @@ $('#impBtn').onclick=async()=>{const msg=$('#impMsg');let a;
   msg.style.color='var(--ok)'; msg.textContent=`✓ اتضافت نتيجة ${a.name}: ${a.correct}/${a.total}`+(ok||STATIC?'':' (على الجهاز ده)'); $('#impText').value='';};
 
 /* ---------- views ---------- */
-function show(id){['vHome','vSubject','vQuiz','vResult','vParent','vPin'].forEach(v=>$('#'+v).classList.toggle('hide',v!==id)); window.scrollTo(0,0);}
+function show(id){['vHome','vSubject','vQuiz','vResult','vParent','vPin'].forEach(v=>$('#'+v).classList.toggle('hide',v!==id)); if(id==='vHome') paintResume(); window.scrollTo(0,0);}
 function setTab(t){ $('#tabStudent').classList.toggle('on',t==='student'); $('#tabParent').classList.toggle('on',t==='parent');
   if(t==='parent'){ if(!isParent) return; renderParent(); show('vParent'); if(!STATIC) location.hash='progress'; } else { show(S&&!$('#vQuiz').classList.contains('hide')?'vQuiz':'vHome'); if(location.hash) history.replaceState(null,'',location.pathname+location.search); } }
 $('#tabStudent').onclick=()=>{ if(!$('#vQuiz').classList.contains('hide')) return; setTab('student'); };
