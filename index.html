@@ -133,9 +133,10 @@ textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10
   <!-- HOME -->
   <section id="vHome">
     <div class="card">
-      <h2>أهلاً! 👋</h2>
-      <p class="muted" style="margin:0 0 12px">اكتبي اسمك، واختاري الاختبار. النتيجة هتتحفظ عشان نتابع مستواكِ في كل درس.</p>
-      <input type="text" id="stName" placeholder="اسم الطالبة" maxlength="40">
+      <h2 id="hello">أهلاً يا نورين! 👋</h2>
+      <p class="muted" style="margin:0" id="helloSub"></p>
+      <input type="text" id="stName" placeholder="اسم الطالبة" maxlength="40" class="hide" style="margin-top:10px">
+      <button class="back tiny" id="notMe" style="margin:8px 0 0">مش نورين؟ غيّري الاسم</button>
     </div>
     <div class="card">
       <h3>اختاري المادة</h3>
@@ -309,9 +310,16 @@ function modeName(m){ m=String(m||''); if(m==='all'||m==='u1'||m==='u2') m='math
 /* ---------- home ---------- */
 $('#subjGrid').innerHTML=SUBJECTS.map(x=>{const n=QUESTIONS.filter(q=>LMAP[q.l].subject===x.id).length;
   return `<button class="subj ${x.live?'':'off'}" data-subj="${x.id}" ${x.live?'':'disabled'}>${x.live?'':'<span class="soon">قريبًا</span>'}<div class="ic">${x.icon}</div><b>${esc(x.ar)}</b><span>${esc(x.en)}${x.live?' · '+n+' سؤال':''}</span></button>`}).join('');
-$('#stName').value=LS.get('mp1_name','');
+$('#stName').value=LS.get('mp1_name','نورين')||'نورين';
+const first=()=>($('#stName').value.trim()||'نورين').split(/\s+/)[0];
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const GREET=['يلا نذاكر سوا النهارده 💪','كل يوم شوية تدريب وهتبقي بطلة 🌟','اختاري المادة وابدئي، إنتِ قدها 👏','جاهزة للتحدي؟ 🚀'];
+function paintHello(){ $('#hello').textContent=`أهلاً يا ${first()}! 👋`; $('#helloSub').textContent=pick(GREET); }
+paintHello();
+$('#notMe').onclick=()=>{ $('#stName').classList.remove('hide'); $('#notMe').classList.add('hide'); $('#stName').focus(); };
+$('#stName').oninput=()=>{ $('#hello').textContent=`أهلاً يا ${first()}! 👋`; };
 let curSubj=null;
-function needName(){const name=$('#stName').value.trim(); if(!name){ $('#stName').focus(); $('#stName').style.borderColor='var(--bad)'; $('#stName').placeholder='اكتبي اسمك الأول'; return null;} LS.set('mp1_name',name); return name;}
+function needName(){const name=$('#stName').value.trim(); if(!name){ $('#stName').classList.remove('hide'); $('#stName').focus(); $('#stName').style.borderColor='var(--bad)'; $('#stName').placeholder='اكتبي اسمك الأول'; return null;} LS.set('mp1_name',name); return name;}
 function openSubject(id){
   const x=SMAP[id]; if(!x||!x.live) return; curSubj=id;
   const qs=QUESTIONS.filter(q=>LMAP[q.l].subject===id), units=[...new Set(LESSONS.filter(l=>l.subject===id).map(l=>l.unit))].sort();
@@ -339,7 +347,7 @@ function start(mode){
   const practice = mode.startsWith('L:');
   curSubj = practice ? LMAP[mode.slice(2)].subject : mode.split(':')[0];
   qs = practice ? shuffle(qs) : qs.slice();
-  S={mode,name,practice,i:0,items:qs.map(q=>({q,order:q.t==='mcq'?shuffle(q.o.map((_,k)=>k)):null,ans:null,checked:false})),t0:Date.now()};
+  S={mode,name,first:name.split(/\s+/)[0],practice,i:0,items:qs.map(q=>({q,order:q.t==='mcq'?shuffle(q.o.map((_,k)=>k)):null,ans:null,checked:false})),t0:Date.now()};
   show('vQuiz'); renderQ();
 }
 function renderQ(){
@@ -364,7 +372,8 @@ function renderQ(){
   const fb=$('#qFeedback');
   if(locked){
     const ok=isRight(q,it.ans);
-    fb.innerHTML=`<div class="feedback ${ok?'ok':'bad'}"><b>${ok?'✔ إجابة صحيحة!':'✘ إجابة غير صحيحة'}</b>${ok?'':`<div class="ex"><b>Correct answer:</b> ${esc(q.t==='mcq'?q.o[q.a]:q.a)}</div>`}<div class="ex">${esc(q.e)}</div></div>`;
+    if(it.msg==null) it.msg = ok ? pick([`برافو يا ${S.first}! 🌟`,`شاطرة يا ${S.first}! 👏`,`ممتاز يا ${S.first}! 💪`,`كده صح يا ${S.first}! ✨`]) : pick([`ولا يهمك يا ${S.first}، شوفي الشرح 👇`,`قربتي يا ${S.first}! بصي على الشرح 👇`,`مش مشكلة يا ${S.first}، كده هتتعلمي 💡`]);
+    fb.innerHTML=`<div class="feedback ${ok?'ok':'bad'}"><b>${esc(it.msg)}</b>${ok?'':`<div class="ex"><b>Correct answer:</b> ${esc(q.t==='mcq'?q.o[q.a]:q.a)}</div>`}<div class="ex">${esc(q.e)}</div></div>`;
   } else fb.innerHTML='';
   updateBtns();
 }
@@ -398,8 +407,12 @@ function ring(p){const r=50,c=2*Math.PI*r,L=level(p);const col=getComputedStyle(
 function videoBlock(lid){
   const v=videos[lid];
   if(v&&v.url) return `<div class="vid">🎬 <a href="${esc(v.url)}" target="_blank" rel="noopener">شوفي فيديو شرح الدرس</a></div>`;
-  return `<div class="vid muted tiny">🎬 فيديو الشرح للدرس ده لسه بيتجهز. بابا هيطلبه من Claude.</div>`;
+  return `<div class="vid muted tiny">🎬 فيديو الشرح للدرس ده بيتجهز مخصوص ليكِ، وهيظهر هنا قريب.</div>`;
 }
+function resultMsg(a){const f=String(a.name||'نورين').split(/\s+/)[0];
+  if(a.pct>=85) return `برافو يا ${f}! 🌟 مستواكِ ممتاز`;
+  if(a.pct>=60) return `شاطرة يا ${f}! 👏 فاضل شوية تدريب`;
+  return `ولا يهمك يا ${f} 💪 هنراجع الدروس دي سوا`;}
 function renderResult(a){
   const L=level(a.pct);
   const lorder=k=>LESSONS.findIndex(l=>l.id===k);
@@ -407,12 +420,12 @@ function renderResult(a){
     return `<div class="lrow"><div class="nm">${code(l)} · ${esc(l.ar)}<small>${esc(l.en)}</small></div><div class="bar ${lv.c}"><i style="width:${p}%"></i></div><div class="pct">${x.c}/${x.t} <span class="pill ${lv.c}">${p}%</span></div></div>`;}).join('');
   const weak=Object.keys(a.perLesson).sort((x,y)=>lorder(x)-lorder(y)).filter(lid=>{const x=a.perLesson[lid];return x.c/x.t*100<60;});
   const weakHtml = weak.length ? `<div class="card"><h3>دروس محتاجة شرح</h3>${weak.map(lid=>{const l=LMAP[lid];return `<div class="weak"><div class="t">${code(l)} · ${esc(l.ar)} <span class="tiny" style="font-family:Inter">(${esc(l.en)})</span></div>${videoBlock(lid)}</div>`}).join('')}</div>`
-    : `<div class="card"><h3>🎉 مفيش دروس ضعيفة!</h3><p class="muted" style="margin:0">كل الدروس 60% أو أكتر. كمّلي تدريب على اللي لونه أصفر.</p></div>`;
+    : `<div class="card"><h3>🎉 مفيش دروس ضعيفة يا ${esc(String(a.name||'').split(/\s+/)[0])}!</h3><p class="muted" style="margin:0">كل الدروس 60% أو أكتر. كمّلي تدريب على اللي لونه أصفر وهتبقي 100% 💯</p></div>`;
   const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
   const rev=a.wrong.map(w=>{const q=qmap[w.id];if(!q)return'';const l=LMAP[q.l];
     return `<div class="review"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div><div class="ans">Your answer: <span class="you">${esc(w.ans||'(no answer)')}</span> · Correct: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
   $('#vResult').innerHTML=`
-    <div class="card"><div class="score">${ring(a.pct)}<div><h2>برافو يا ${esc(a.name)}!</h2><div class="muted">${esc(modeName(a.mode))} · ${a.correct} من ${a.total} صح</div><div style="margin-top:8px"><span class="lvl ${L.c}">${L.t}</span></div></div></div></div>
+    <div class="card"><div class="score">${ring(a.pct)}<div><h2>${esc(resultMsg(a))}</h2><div class="muted">${esc(modeName(a.mode))} · ${a.correct} من ${a.total} صح</div><div style="margin-top:8px"><span class="lvl ${L.c}">${L.t}</span></div></div></div></div>
     <div class="card"><h3>النتيجة في كل درس</h3>${rows}</div>
     ${weakHtml}
     ${a.wrong.length?`<div class="card"><h3>راجعي الأسئلة الغلط (${a.wrong.length})</h3>${rev}</div>`:''}
