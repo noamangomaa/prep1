@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مذاكرة أولى إعدادي لغات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F7FB; --card:#FFFFFF; --ink:#1B2333; --muted:#667085; --line:#E4E7EE;
+  --brand:#2F5BEA; --brand-soft:#E8EEFF; --u1:#F08A24; --u2:#7B4FD6;
+  --ok:#14945A; --ok-soft:#E3F6EC; --mid:#C98200; --mid-soft:#FFF4DC; --bad:#D8384A; --bad-soft:#FDE8EA;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#10141C;--card:#1A2030;--ink:#E9ECF3;--muted:#9AA3B5;--line:#2A3245;--brand:#7C9BFF;--brand-soft:#232E4D;
+  --ok:#3CCB86;--ok-soft:#173326;--mid:#F2B544;--mid-soft:#3A2E14;--bad:#FF6B7B;--bad-soft:#3D1D22;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Cairo',system-ui,sans-serif;font-size:16px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--u1),var(--u2));display:grid;place-items:center;color:#fff;font:700 20px Inter}
+.logo h1{font-size:19px;margin:0;font-weight:800}
+.logo small{display:block;color:var(--muted);font-size:13px;font-weight:600;margin-top:-4px}
+.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:700 14px Cairo;padding:7px 16px;border-radius:999px;cursor:pointer}
+.tabs button.on{background:var(--brand);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:14px}
+h2{font-size:20px;margin:0 0 6px}
+h3{font-size:16px;margin:0 0 8px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=text],input[type=url]{font:600 16px Cairo;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);width:100%}
+input:focus{outline:none;border-color:var(--brand)}
+.btn{border:0;font:700 15px Cairo;padding:11px 20px;border-radius:12px;cursor:pointer;background:var(--brand);color:#fff;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--brand-soft);color:var(--brand)}
+.btn.plain{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.mode{border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;background:var(--card);text-align:right;font-family:Cairo;color:var(--ink)}
+.mode:hover{border-color:var(--brand)}
+.mode b{display:block;font-size:16px}
+.mode span{color:var(--muted);font-size:13.5px}
+.mode .tag{display:inline-block;font:700 12px Inter;padding:2px 8px;border-radius:6px;color:#fff;margin-bottom:6px}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.subj{border:1.5px solid var(--line);border-radius:16px;padding:16px 14px;cursor:pointer;background:var(--card);font-family:Cairo;color:var(--ink);text-align:right;position:relative}
+.subj:hover{border-color:var(--brand)}
+.subj .ic{font-size:28px;line-height:1}
+.subj b{display:block;font-size:17px;margin-top:6px}
+.subj span{color:var(--muted);font:600 12.5px Inter}
+.subj.off{opacity:.55;cursor:default}
+.subj.off:hover{border-color:var(--line)}
+.subj .soon{position:absolute;top:10px;left:10px;font:700 11px Cairo;background:var(--bg);color:var(--muted);padding:1px 8px;border-radius:99px}
+.back{background:none;border:0;color:var(--brand);font:700 14px Cairo;cursor:pointer;padding:0;margin-bottom:8px}
+.subjhead{font-size:13px;font-weight:800;color:var(--muted);margin:14px 0 2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 13.5px Cairo;cursor:pointer}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip .n{font-family:Inter;font-weight:700;color:var(--muted);margin-left:4px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .3s}
+.qhead{display:flex;justify-content:space-between;align-items:center;margin:10px 0 14px;color:var(--muted);font-size:14px;font-weight:600}
+.lesson-tag{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--brand-soft);color:var(--brand)}
+.q{direction:ltr;text-align:left;font-family:Inter,sans-serif;font-size:18px;font-weight:600;line-height:1.55;margin:4px 0 18px}
+.opts{display:grid;gap:10px;direction:ltr}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);cursor:pointer;font:500 16px Inter;color:var(--ink)}
+.opt .k{width:28px;height:28px;flex:none;border-radius:8px;display:grid;place-items:center;background:var(--bg);font-weight:700;font-size:14px;color:var(--muted)}
+.opt:hover{border-color:var(--brand)}
+.opt.sel{border-color:var(--brand);background:var(--brand-soft)}
+.opt.sel .k{background:var(--brand);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .k{background:var(--bad);color:#fff}
+.numin{direction:ltr;text-align:left;font:600 20px Inter !important;max-width:260px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.feedback{margin-top:14px;border-radius:12px;padding:12px 14px;font-size:15px}
+.feedback.ok{background:var(--ok-soft);color:var(--ok)}
+.feedback.bad{background:var(--bad-soft);color:var(--bad)}
+.feedback .ex{direction:ltr;text-align:left;font-family:Inter;color:var(--ink);font-size:14.5px;margin-top:4px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.score{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:120px;height:120px;flex:none}
+.ring text{font:800 26px Inter;fill:var(--ink)}
+.lvl{display:inline-block;font-weight:800;padding:4px 14px;border-radius:99px;font-size:15px}
+.lvl.ok{background:var(--ok-soft);color:var(--ok)} .lvl.mid{background:var(--mid-soft);color:var(--mid)} .lvl.bad{background:var(--bad-soft);color:var(--bad)}
+.lrow{display:grid;grid-template-columns:minmax(150px,1.3fr) 2fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.lrow .nm{font-weight:700;font-size:14.5px}
+.lrow .nm small{display:block;color:var(--muted);font:500 12px Inter;direction:ltr;text-align:right}
+.lrow .pct{font:700 14px Inter;min-width:70px;text-align:left}
+.bar.ok>i{background:var(--ok)} .bar.mid>i{background:var(--mid)} .bar.bad>i{background:var(--bad)}
+.weak{border:1.5px solid var(--bad);background:var(--bad-soft);border-radius:14px;padding:14px;margin-top:10px}
+.weak .t{font-weight:800;color:var(--bad)}
+.vid{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.vid a{font-weight:700;color:var(--brand)}
+.review{border-top:1px solid var(--line);padding:12px 0}
+.review .q{font-size:15.5px;margin:0 0 6px}
+.ans{direction:ltr;text-align:left;font-family:Inter;font-size:14px}
+.ans .you{color:var(--bad);font-weight:600} .ans .cor{color:var(--ok);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+th{color:var(--muted);font-weight:700;font-size:13px}
+td.num{font-family:Inter;font-weight:600}
+.pill{font:700 12px Inter;padding:2px 8px;border-radius:99px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.mid{background:var(--mid-soft);color:var(--mid)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.none{background:var(--bg);color:var(--muted)}
+.att{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.att summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.att summary::-webkit-details-marker{display:none}
+.att .body{padding:0 14px 12px}
+.notice{background:var(--mid-soft);color:var(--mid);border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.empty{color:var(--muted);text-align:center;padding:24px 0}
+.hide{display:none !important}
+.tiny{font-size:12.5px}
+.wa{background:#1FAF5A;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.share{border:1.5px dashed var(--ok);background:var(--ok-soft);border-radius:14px;padding:16px}
+textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+@media (max-width:560px){.lrow{grid-template-columns:1fr auto}.lrow .bar{grid-column:1/-1;order:3}.q{font-size:16.5px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><div class="mark">1</div><div><h1>مذاكرة أولى إعدادي لغات</h1><small>Prep 1 · Term 1 · 2026/2027</small></div></div>
+    <div class="tabs hide" id="tabs"><button id="tabStudent" class="on">الاختبار</button><button id="tabParent">متابعة ولي الأمر</button></div>
+  </header>
+  <div id="dbNote" class="notice hide"></div>
+
+  <!-- HOME -->
+  <section id="vHome">
+    <div class="card">
+      <h2>أهلاً! 👋</h2>
+      <p class="muted" style="margin:0 0 12px">اكتبي اسمك، واختاري الاختبار. النتيجة هتتحفظ عشان نتابع مستواكِ في كل درس.</p>
+      <input type="text" id="stName" placeholder="اسم الطالبة" maxlength="40">
+    </div>
+    <div class="card">
+      <h3>اختاري المادة</h3>
+      <div class="subjects" id="subjGrid"></div>
+    </div>
+  </section>
+
+  <!-- SUBJECT -->
+  <section id="vSubject" class="hide">
+    <button class="back" id="backHome">→ رجوع للمواد</button>
+    <div class="card">
+      <h2 id="sjTitle"></h2>
+      <h3 style="margin-top:10px">اختاري الاختبار</h3>
+      <div class="modes" id="sjModes"></div>
+      <h3 style="margin-top:18px">أو تدريب على درس واحد <span class="muted tiny">(بيظهر التصحيح والشرح بعد كل سؤال)</span></h3>
+      <div class="chips" id="lessonChips"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="vQuiz" class="hide">
+    <div class="card">
+      <div class="bar"><i id="qBar" style="width:0"></i></div>
+      <div class="qhead"><span id="qCount"></span><span class="lesson-tag" id="qLesson"></span></div>
+      <div class="q" id="qText"></div>
+      <div id="qBody"></div>
+      <div id="qFeedback"></div>
+      <div class="nav">
+        <button class="btn plain" id="btnPrev">السابق</button>
+        <div class="row">
+          <button class="btn ghost hide" id="btnCheck">تحقّقي من الإجابة</button>
+          <button class="btn" id="btnNext">التالي</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn plain" id="btnQuit" style="font-size:13px">إنهاء والرجوع</button>
+  </section>
+
+  <!-- RESULT -->
+  <section id="vResult" class="hide"></section>
+
+  <!-- PIN -->
+  <section id="vPin" class="hide">
+    <div class="card" style="max-width:380px;margin:40px auto;text-align:center">
+      <div style="font-size:34px">🔒</div>
+      <h2 id="pinTitle">صفحة المتابعة</h2>
+      <p class="muted tiny" id="pinHint" style="margin:0 0 12px"></p>
+      <input type="password" inputmode="numeric" id="pinIn" maxlength="8" style="text-align:center;font:700 22px Inter;letter-spacing:6px" autocomplete="off">
+      <div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="pinBtn">دخول</button><button class="btn plain" id="pinCancel">رجوع</button></div>
+      <div id="pinMsg" class="tiny" style="color:var(--bad);margin-top:8px"></div>
+    </div>
+  </section>
+
+  <!-- PARENT -->
+  <section id="vParent" class="hide">
+    <div class="card">
+      <h2>إضافة نتيجة من واتساب</h2>
+      <p class="muted tiny" style="margin:0 0 8px">لو بنتك حلّت من موبايلها وبعتتلك رسالة النتيجة، الزق الرسالة كلها هنا واضغط "إضافة".</p>
+      <textarea id="impText" placeholder="Paste the WhatsApp message (it contains MP1-...)"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="impBtn">إضافة النتيجة</button><span id="impMsg" class="tiny"></span></div>
+    </div>
+    <div class="card">
+      <h2>مستوى كل درس</h2>
+      <p class="muted tiny" style="margin:0 0 8px">آخر نتيجة في كل درس، مقارنة بالمحاولة الأولى. الأحمر محتاج شرح.</p>
+      <div id="pLessons"></div>
+    </div>
+    <div class="card">
+      <h2>كل المحاولات</h2>
+      <div id="pAttempts"></div>
+    </div>
+    <div class="card">
+      <h2>فيديوهات الشرح</h2>
+      <p class="muted tiny" style="margin:0 0 10px">لكل درس مكان لرابط فيديو شرح. Claude بيضيف رابط الفيديو هنا لما يعمله، وتقدر كمان تحط رابط بنفسك (يوتيوب مثلاً). الفيديو بيظهر لبنتك تلقائيًا في نتيجتها لما الدرس يكون ضعيف.</p>
+      <div id="pVideos"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const DATA = {"subjects": [{"id": "math", "ar": "الرياضيات", "en": "Math", "icon": "📐", "live": true, "units": {"1": {"en": "Numbers and Their Operations", "ar": "الأعداد والعمليات عليها"}, "2": {"en": "Algebra", "ar": "الجبر"}}}, {"id": "sci", "ar": "العلوم", "en": "Science", "icon": "🔬", "live": true, "units": {"1": {"en": "The Matter", "ar": "المادة"}, "2": {"en": "Force Fields", "ar": "مجالات القوى"}}}, {"id": "eng", "ar": "اللغة الإنجليزية", "en": "English", "icon": "🔤", "live": false}, {"id": "arb", "ar": "اللغة العربية", "en": "Arabic", "icon": "📖", "live": false}, {"id": "soc", "ar": "الدراسات الاجتماعية", "en": "Social Studies", "icon": "🌍", "live": false}], "lessons": [{"id": "1-1", "unit": 1, "en": "Proportion", "ar": "التناسب", "subject": "math", "code": "1-1"}, {"id": "1-2", "unit": 1, "en": "Applications of Ratio and Proportion", "ar": "تطبيقات النسبة والتناسب", "subject": "math", "code": "1-2"}, {"id": "1-3", "unit": 1, "en": "Sets and Their Operations", "ar": "المجموعات والعمليات عليها", "subject": "math", "code": "1-3"}, {"id": "1-4", "unit": 1, "en": "Operations on Integers", "ar": "العمليات على الأعداد الصحيحة", "subject": "math", "code": "1-4"}, {"id": "1-5", "unit": 1, "en": "Operations on Rational Numbers", "ar": "العمليات على الأعداد النسبية", "subject": "math", "code": "1-5"}, {"id": "2-1", "unit": 2, "en": "Mathematical Expressions and Formulas", "ar": "المقادير والصيغ الرياضية", "subject": "math", "code": "2-1"}, {"id": "2-2", "unit": 2, "en": "Linear Equations", "ar": "المعادلات الخطية", "subject": "math", "code": "2-2"}, {"id": "S1-1", "code": "1-1", "subject": "sci", "unit": 1, "en": "Structure of the Atom", "ar": "تركيب الذرة"}, {"id": "S1-2", "code": "1-2", "subject": "sci", "unit": 1, "en": "The Periodic Table of Elements", "ar": "الجدول الدوري للعناصر"}, {"id": "S1-3", "code": "1-3", "subject": "sci", "unit": 1, "en": "Matter and Its Properties", "ar": "المادة وخواصها"}, {"id": "S1-4", "code": "1-4", "subject": "sci", "unit": 1, "en": "Chemical Bonds", "ar": "الروابط الكيميائية"}, {"id": "S2-1", "code": "2-1", "subject": "sci", "unit": 2, "en": "Electric Forces", "ar": "القوى الكهربية"}, {"id": "S2-2", "code": "2-2", "subject": "sci", "unit": 2, "en": "Magnetic Forces", "ar": "القوى المغناطيسية"}, {"id": "S2-3", "code": "2-3", "subject": "sci", "unit": 2, "en": "Gravitational Forces", "ar": "قوى الجاذبية"}], "questions": [{"id": "q101", "l": "1-1", "t": "mcq", "q": "Which of the following ratio pairs forms a proportion?", "o": ["4/7 and 12/21", "6/10 and 10/25", "2/3 and 3/2", "5/8 and 8/5"], "a": 0, "e": "Cross multiplication: 4 × 21 = 84 and 7 × 12 = 84. The products are equal, so they form a proportion."}, {"id": "q102", "l": "1-1", "t": "num", "q": "If 3/x = 12/20, then x = ?", "a": 5, "e": "Cross multiplication: 12 × x = 3 × 20 = 60, so x = 60 ÷ 12 = 5."}, {"id": "q103", "l": "1-1", "t": "mcq", "q": "If a/b = c/d, then:", "o": ["a × d = b × c", "a × c = b × d", "a + d = b + c", "a × b = c × d"], "a": 0, "e": "Cross multiplication property: the product of the extremes (a × d) equals the product of the means (b × c)."}, {"id": "q104", "l": "1-1", "t": "num", "q": "If x : 12 = 5 : 4, then x = ?", "a": 15, "e": "4 × x = 12 × 5 = 60, so x = 60 ÷ 4 = 15."}, {"id": "q105", "l": "1-1", "t": "mcq", "q": "Do 6/10 and 10/25 form a proportion?", "o": ["Yes, because 6 × 25 = 10 × 10", "No, because 6 × 25 ≠ 10 × 10", "Yes, because both are less than 1", "It cannot be determined"], "a": 1, "e": "6 × 25 = 150 but 10 × 10 = 100. The products are not equal, so they are NOT a proportion."}, {"id": "q106", "l": "1-1", "t": "mcq", "q": "When the points (time, distance) lie on a straight line passing through the origin, the distance is ........ to the time.", "o": ["proportional", "not related", "equal", "always greater than"], "a": 0, "e": "A straight line through the origin (0, 0) means the relation is a proportion (the ratio stays the same)."}, {"id": "q107", "l": "1-1", "t": "num", "q": "If 4/5 = 16/y, then y = ?", "a": 20, "e": "4 × y = 5 × 16 = 80, so y = 80 ÷ 4 = 20."}, {"id": "q201", "l": "1-2", "t": "num", "q": "The scale of a map is 1 : 600,000. The distance between two points on the map is 4.5 cm. What is the real distance in km?", "a": 27, "e": "Real distance = 4.5 × 600,000 = 2,700,000 cm = 27,000 m = 27 km."}, {"id": "q202", "l": "1-2", "t": "mcq", "q": "If the scale drawing is greater than 1, it is a:", "o": ["magnification", "minimization", "real size", "proportional division"], "a": 0, "e": "Scale > 1 means the drawing is bigger than reality (magnification). Scale < 1 is a minimization."}, {"id": "q203", "l": "1-2", "t": "mcq", "q": "The real distance between two cities is 200 km and the distance on the map is 5 cm. The scale of the map is:", "o": ["1 : 4,000,000", "1 : 40,000", "1 : 400,000", "1 : 40,000,000"], "a": 0, "e": "200 km = 20,000,000 cm. Scale = 5 : 20,000,000 = 1 : 4,000,000."}, {"id": "q204", "l": "1-2", "t": "num", "q": "Three persons shared 7,200 LE in the ratio 3 : 4 : 5. What is the largest share in LE?", "a": 3000, "e": "Total parts = 3 + 4 + 5 = 12. One part = 7,200 ÷ 12 = 600. Largest share = 5 × 600 = 3,000 LE."}, {"id": "q205", "l": "1-2", "t": "num", "q": "The price of a phone is 12,750 LE and the store offers an 8% discount. What is the price after the discount in LE?", "a": 11730, "e": "Discount = 12,750 × 8/100 = 1,020 LE. Price after discount = 12,750 − 1,020 = 11,730 LE."}, {"id": "q206", "l": "1-2", "t": "num", "q": "Sandy received a 15% discount on sneakers and paid 340 LE. What was the original price in LE?", "a": 400, "e": "She paid 100% − 15% = 85% of the price. 85/100 × P = 340, so P = 340 × 100 ÷ 85 = 400 LE."}, {"id": "q207", "l": "1-2", "t": "mcq", "q": "The price of an item was reduced from 1,500 LE to 1,200 LE. The discount rate is:", "o": ["20%", "3%", "15%", "30%"], "a": 0, "e": "Discount = 1,500 − 1,200 = 300 LE. Rate = 300 ÷ 1,500 × 100 = 20%."}, {"id": "q301", "l": "1-3", "t": "mcq", "q": "Which of the following is an empty set?", "o": ["The set of integers between 1 and 2", "{0}", "{1, 2}", "The set of natural numbers N"], "a": 0, "e": "There are no integers between 1 and 2, so the set has no elements: it is the empty set φ. Note that {0} is NOT empty, it has one element (0)."}, {"id": "q302", "l": "1-3", "t": "num", "q": "How many subsets does the set A = {4, 6, 8} have?", "a": 8, "e": "A set with n elements has 2ⁿ subsets. Here n = 3, so 2³ = 8 subsets."}, {"id": "q303", "l": "1-3", "t": "mcq", "q": "If A = {2, 3, 4, 5, 7} and B = {4, 7}, then:", "o": ["B ⊂ A", "A ⊂ B", "A = B", "B ⊄ A"], "a": 0, "e": "Every element of B (4 and 7) is in A, so B is a subset of A: B ⊂ A."}, {"id": "q304", "l": "1-3", "t": "mcq", "q": "If X = {1, 3, 4, 5, 6}, which set is a subset of X?", "o": ["{1, 5, 6}", "{3, 5, 9}", "{0, 1}", "{2, 3}"], "a": 0, "e": "1, 5 and 6 are all elements of X. Each of the other sets has an element not in X (9, 0 or 2)."}, {"id": "q305", "l": "1-3", "t": "mcq", "q": "Which of the following is an infinite set?", "o": ["N = {0, 1, 2, 3, ...}", "{2, 3, 5}", "{ }", "The days of the week"], "a": 0, "e": "The natural numbers never end, so N is infinite. The other sets have a limited number of elements."}, {"id": "q306", "l": "1-3", "t": "num", "q": "How many subsets does a set with 5 elements have?", "a": 32, "e": "Number of subsets = 2ⁿ = 2⁵ = 32."}, {"id": "q307", "l": "1-3", "t": "mcq", "q": "If A = {1, 2, 3, 4} and B = {3, 4, 5}, then A ∩ B = ?", "o": ["{3, 4}", "{1, 2, 3, 4, 5}", "{1, 2}", "{5}"], "a": 0, "e": "The intersection contains the elements found in BOTH sets: 3 and 4."}, {"id": "q401", "l": "1-4", "t": "num", "q": "−2 + (−4) = ?", "a": -6, "e": "Both numbers are negative: add the absolute values (2 + 4 = 6) and keep the negative sign: −6."}, {"id": "q402", "l": "1-4", "t": "num", "q": "13 + (−7) = ?", "a": 6, "e": "Opposite signs: subtract the absolute values (13 − 7 = 6) and take the sign of the bigger absolute value (13 is positive): 6."}, {"id": "q403", "l": "1-4", "t": "num", "q": "|−13| = ?", "a": 13, "e": "The absolute value is the distance from zero, always positive: |−13| = 13."}, {"id": "q404", "l": "1-4", "t": "num", "q": "−13 + 7 = ?", "a": -6, "e": "Opposite signs: 13 − 7 = 6, and the sign of the bigger absolute value (13) is negative: −6."}, {"id": "q405", "l": "1-4", "t": "mcq", "q": "The property a + (−a) = 0 is called:", "o": ["Existence of additive inverses", "Existence of additive identity", "Commutative property", "Closure property"], "a": 0, "e": "(−a) is the additive inverse of a, because their sum is 0. The additive identity is 0 itself (a + 0 = a)."}, {"id": "q406", "l": "1-4", "t": "num", "q": "(−5) × (−3) + (−4) = ?", "a": 11, "e": "First multiply: (−5) × (−3) = 15 (negative × negative = positive). Then 15 + (−4) = 11."}, {"id": "q407", "l": "1-4", "t": "num", "q": "−8 − (−3) = ?", "a": -5, "e": "Subtracting a negative is adding its inverse: −8 − (−3) = −8 + 3 = −5."}, {"id": "q501", "l": "1-5", "t": "mcq", "q": "The rational number 1/2 expressed as a percentage is:", "o": ["50%", "12%", "2%", "0.5%"], "a": 0, "e": "1/2 = 50/100 = 50%."}, {"id": "q502", "l": "1-5", "t": "num", "q": "Write 2/5 as a decimal.", "a": 0.4, "e": "2/5 = 4/10 = 0.4."}, {"id": "q503", "l": "1-5", "t": "mcq", "q": "−5/8 + 3/8 = ?", "o": ["−1/4", "−1/8", "1/4", "−1"], "a": 0, "e": "Same denominators: (−5 + 3)/8 = −2/8 = −1/4."}, {"id": "q504", "l": "1-5", "t": "mcq", "q": "1/4 + (−1/3) = ?", "o": ["−1/12", "1/12", "−2/7", "0"], "a": 0, "e": "Common denominator 12: 3/12 + (−4/12) = −1/12."}, {"id": "q505", "l": "1-5", "t": "mcq", "q": "The rational number 2/9 written as a decimal is:", "o": ["0.222... (0.2 recurring)", "0.29", "0.92", "2.9"], "a": 0, "e": "2 ÷ 9 = 0.2222..., an infinite recurring decimal, read as 0.2 recurring."}, {"id": "q506", "l": "1-5", "t": "mcq", "q": "2¼ expressed as a percentage is:", "o": ["225%", "24%", "214%", "2.25%"], "a": 0, "e": "2¼ = 2.25 = 225/100 = 225%."}, {"id": "q507", "l": "1-5", "t": "mcq", "q": "0.4 + 1⅔ = ?", "o": ["2 1/15", "1 7/15", "2 1/5", "2 4/15"], "a": 0, "e": "0.4 = 2/5 and 1⅔ = 5/3. With denominator 15: 6/15 + 25/15 = 31/15 = 2 1/15."}, {"id": "q601", "l": "2-1", "t": "mcq", "q": "The algebraic expression for \"subtracting 5 from 3 times the number x\" is:", "o": ["3x − 5", "5 − 3x", "3(x − 5)", "3 + x − 5"], "a": 0, "e": "3 times x is 3x, then subtract 5: 3x − 5."}, {"id": "q602", "l": "2-1", "t": "mcq", "q": "\"The speed x of a car does not exceed 120 km/h\" is written as:", "o": ["x ≤ 120", "x ≥ 120", "x < 120", "x = 120"], "a": 0, "e": "\"Does not exceed\" means it can be 120 or less: x ≤ 120 (an inequality)."}, {"id": "q603", "l": "2-1", "t": "mcq", "q": "\"Double the number x added to 5 is equal to 1\" is written as:", "o": ["2x + 5 = 1", "2(x + 5) = 1", "x + 2 + 5 = 1", "2x = 5 + 1"], "a": 0, "e": "Double x is 2x, added to 5 gives 2x + 5, and it equals 1: 2x + 5 = 1."}, {"id": "q604", "l": "2-1", "t": "mcq", "q": "The formula for the area (A) of a square with side length l is:", "o": ["A = l²", "A = 4l", "A = 2l", "A = l³"], "a": 0, "e": "Area of a square = side × side = l²."}, {"id": "q605", "l": "2-1", "t": "num", "q": "Find the value of 3y − 4 when y = 5.", "a": 11, "e": "3 × 5 − 4 = 15 − 4 = 11."}, {"id": "q606", "l": "2-1", "t": "mcq", "q": "Which of the following is an inequality?", "o": ["2x − 1 > 3", "2x = 5", "A = l × w", "3y − 4 = 2y"], "a": 0, "e": "An inequality uses one of the signs <, >, ≤ or ≥. Only 2x − 1 > 3 does."}, {"id": "q607", "l": "2-1", "t": "num", "q": "Ahmed paid for 5 cinema tickets (x LE each) and 3 popcorn cups (y LE each) after a 20 LE discount, so he paid 5x + 3y − 20. Find the amount if x = 50 and y = 20.", "a": 290, "e": "5 × 50 + 3 × 20 − 20 = 250 + 60 − 20 = 290 LE."}, {"id": "q701", "l": "2-2", "t": "mcq", "q": "The solution set of the equation 2x + 1 = 7, if the substitution set is {2, 3, 4}, is:", "o": ["{3}", "{2}", "{4}", "{2, 3, 4}"], "a": 0, "e": "Try each value: 2(2)+1 = 5 ✗, 2(3)+1 = 7 ✓, 2(4)+1 = 9 ✗. So the solution set is {3}."}, {"id": "q702", "l": "2-2", "t": "num", "q": "Solve: x + 5 = −3. x = ?", "a": -8, "e": "Subtract 5 from both sides: x = −3 − 5 = −8."}, {"id": "q703", "l": "2-2", "t": "num", "q": "Solve: 2x − 15 = 12. x = ?", "a": 13.5, "e": "Add 15 to both sides: 2x = 27. Divide by 2: x = 13.5."}, {"id": "q704", "l": "2-2", "t": "num", "q": "Solve: 3x + 2 = 17. x = ?", "a": 5, "e": "Subtract 2: 3x = 15. Divide by 3: x = 5."}, {"id": "q705", "l": "2-2", "t": "mcq", "q": "Which equation is equivalent to 2x + 7 = 19?", "o": ["2x = 12", "2x = 26", "x + 7 = 19", "2x = 19"], "a": 0, "e": "Subtracting 7 from both sides gives 2x = 12. Equivalent equations have the same solution (x = 6)."}, {"id": "q706", "l": "2-2", "t": "mcq", "q": "\"The sum of three consecutive odd numbers is 87\". If the smallest is y, the equation is:", "o": ["y + (y + 2) + (y + 4) = 87", "y + (y + 1) + (y + 2) = 87", "3y = 87 + 6", "y + 2y + 3y = 87"], "a": 0, "e": "Consecutive odd numbers differ by 2: y, y + 2, y + 4. Their sum is 87."}, {"id": "q707", "l": "2-2", "t": "num", "q": "The sum of three consecutive odd numbers is 87. What is the smallest number?", "a": 27, "e": "y + (y + 2) + (y + 4) = 87 → 3y + 6 = 87 → 3y = 81 → y = 27. (27 + 29 + 31 = 87 ✓)"}, {"id": "s101", "l": "S1-1", "t": "mcq", "q": "The positively charged particles found inside the nucleus are:", "o": ["protons", "neutrons", "electrons", "molecules"], "a": 0, "e": "The nucleus contains positive protons (+1) and neutral neutrons (0). Electrons (−1) revolve around the nucleus."}, {"id": "s102", "l": "S1-1", "t": "num", "q": "A sodium atom has mass number A = 23 and atomic number Z = 11. How many neutrons does it have?", "a": 12, "e": "Number of neutrons n = A − Z = 23 − 11 = 12."}, {"id": "s103", "l": "S1-1", "t": "num", "q": "What is the maximum number of electrons that the third energy level (M) can hold?", "a": 18, "e": "Use 2n²: for n = 3, 2 × 3² = 2 × 9 = 18 electrons."}, {"id": "s104", "l": "S1-1", "t": "mcq", "q": "The electron configuration of the chlorine atom (₁₇Cl) is:", "o": ["K: 2, L: 8, M: 7", "K: 2, L: 8, M: 8", "K: 2, L: 7, M: 8", "K: 8, L: 2, M: 7"], "a": 0, "e": "17 electrons: K takes 2 (15 left), L takes 8 (7 left), M takes the remaining 7 → 2, 8, 7."}, {"id": "s105", "l": "S1-1", "t": "mcq", "q": "Isotopes are atoms of the same element that have:", "o": ["the same atomic number but different mass numbers", "the same mass number but different atomic numbers", "different numbers of protons", "different numbers of electrons only"], "a": 0, "e": "Isotopes (like protium, deuterium and tritium) have the same atomic number (protons) but different mass numbers (different neutrons)."}, {"id": "s106", "l": "S1-1", "t": "mcq", "q": "The scientist who formulated the first atomic model on an experimental basis is:", "o": ["Rutherford", "Dalton", "Democritus", "Thomson"], "a": 0, "e": "Rutherford formulated the first atomic model based on experiments. Dalton formulated the first scientific theory about the atom."}, {"id": "s107", "l": "S1-1", "t": "mcq", "q": "In NPK fertilizer, the element phosphorus (P) is necessary for:", "o": ["developing strong roots", "the greening of plant leaves", "healthy plant growth", "making the soil salty"], "a": 0, "e": "N (nitrogen) → greening of leaves, P (phosphorus) → strong roots, K (potassium) → healthy plant growth."}, {"id": "s201", "l": "S1-2", "t": "mcq", "q": "In the modern periodic table, elements are arranged according to:", "o": ["their atomic numbers and the way of filling energy sublevels", "their atomic masses only", "their colours", "their densities"], "a": 0, "e": "The modern table uses atomic numbers and the filling of sublevels. Mendeleev's table used atomic masses."}, {"id": "s202", "l": "S1-2", "t": "num", "q": "How many horizontal periods does the modern periodic table have?", "a": 7, "e": "The modern periodic table has 7 horizontal periods and 18 vertical groups."}, {"id": "s203", "l": "S1-2", "t": "mcq", "q": "Sodium (₁₁Na) has the electron configuration 2, 8, 1. Its location in the periodic table is:", "o": ["Period 3, Group 1A", "Period 1, Group 3A", "Period 3, Group 8A", "Period 2, Group 1A"], "a": 0, "e": "Number of energy levels = 3 → period 3. Electrons in the outermost level = 1 → group 1A."}, {"id": "s204", "l": "S1-2", "t": "mcq", "q": "Elements of the same group are similar in chemical properties because they have:", "o": ["the same number of electrons in the outermost energy level", "the same atomic number", "the same number of neutrons", "the same mass number"], "a": 0, "e": "Same group = same number of outer (valence) electrons = similar chemical properties."}, {"id": "s205", "l": "S1-2", "t": "mcq", "q": "The only liquid metal is:", "o": ["mercury", "bromine", "sodium", "iron"], "a": 0, "e": "Mercury is the only liquid metal. Bromine is the only liquid NONmetal."}, {"id": "s206", "l": "S1-2", "t": "mcq", "q": "The most active halogen nonmetal is:", "o": ["fluorine", "chlorine", "bromine", "iodine"], "a": 0, "e": "The chemical activity of halogens decreases as the atomic number increases, so fluorine (the smallest) is the most active."}, {"id": "s207", "l": "S1-2", "t": "mcq", "q": "The valency of an element in group 6A (like oxygen) is:", "o": ["Divalent", "Monovalent", "Trivalent", "Zero"], "a": 0, "e": "Group 6A has 6 outer electrons; it needs 2 more to complete 8, so it is divalent."}, {"id": "s301", "l": "S1-3", "t": "mcq", "q": "A mixture of table salt dissolved in water is a:", "o": ["homogeneous mixture (solution)", "heterogeneous mixture", "pure element", "compound"], "a": 0, "e": "You cannot see the salt in the water with the naked eye, so it is a homogeneous mixture (solution). It is separated by evaporation and condensation."}, {"id": "s302", "l": "S1-3", "t": "mcq", "q": "A mixture of sand and water can be separated by:", "o": ["filtration", "electrolysis", "heating to form oxide", "a chemical reaction"], "a": 0, "e": "Sand and water is a heterogeneous mixture; its components are separated by a physical method: filtration."}, {"id": "s303", "l": "S1-3", "t": "mcq", "q": "Water can be separated into hydrogen and oxygen only by electrolysis. So, water is:", "o": ["a compound", "an element", "a heterogeneous mixture", "a homogeneous mixture"], "a": 0, "e": "Compounds can be separated only by chemical methods (like electrolysis), not physical ones."}, {"id": "s304", "l": "S1-3", "t": "mcq", "q": "The ozone molecule (O₃) is an example of a ........ molecule.", "o": ["polyatomic", "monatomic", "diatomic", "organic"], "a": 0, "e": "O₃ has 3 atoms → polyatomic. O₂ is diatomic and C is monatomic."}, {"id": "s305", "l": "S1-3", "t": "mcq", "q": "Which of the following is an organic molecule?", "o": ["Methane (CH₄)", "Nitric acid (HNO₃)", "Oxygen (O₂)", "Sodium chloride (NaCl)"], "a": 0, "e": "Organic compounds all contain carbon and hydrogen. Methane CH₄ is the simplest organic compound."}, {"id": "s306", "l": "S1-3", "t": "mcq", "q": "Which of the following is a CHEMICAL property?", "o": ["Change in the colour of litmus paper", "Density", "Melting point", "Viscosity"], "a": 0, "e": "Chemical properties appear only during a chemical reaction (like changing litmus colour). Density, melting point and viscosity are physical properties."}, {"id": "s307", "l": "S1-3", "t": "mcq", "q": "Helium is used for filling balloons (blimps) because it is:", "o": ["less dense than air and non-flammable", "denser than air", "flammable", "a good conductor of electricity"], "a": 0, "e": "Helium is lighter (less dense) than air so the balloon rises, and it does not burn, so it is safe."}, {"id": "s401", "l": "S1-4", "t": "mcq", "q": "Noble gases are stable elements because:", "o": ["their outermost energy level is complete (8 electrons, except helium 2)", "they have no electrons", "they are metals", "they have a large number of neutrons"], "a": 0, "e": "A complete outer level (8 electrons; helium 2) makes noble gases stable, so they do not react easily."}, {"id": "s402", "l": "S1-4", "t": "mcq", "q": "During ionic bonding, metal atoms tend to:", "o": ["lose their valence electrons, forming positive ions", "gain electrons, forming negative ions", "share electrons", "lose protons"], "a": 0, "e": "Metals lose their valence electrons and become positive ions (cations). Nonmetals gain electrons and become negative ions (anions)."}, {"id": "s403", "l": "S1-4", "t": "mcq", "q": "The type of bond in sodium chloride (NaCl) is:", "o": ["ionic bond", "single covalent bond", "double covalent bond", "triple covalent bond"], "a": 0, "e": "NaCl forms between a metal (Na) and a nonmetal (Cl): an electrostatic attraction between Na⁺ and Cl⁻ → ionic bond."}, {"id": "s404", "l": "S1-4", "t": "mcq", "q": "The bond in the nitrogen molecule (N₂) is a:", "o": ["triple covalent bond", "single covalent bond", "double covalent bond", "ionic bond"], "a": 0, "e": "Each nitrogen atom shares 3 electrons: N≡N, a triple covalent bond. O₂ has a double bond (O=O)."}, {"id": "s405", "l": "S1-4", "t": "num", "q": "How many single covalent bonds are there in one methane molecule (CH₄)?", "a": 4, "e": "Carbon shares one electron with each of the 4 hydrogen atoms → 4 single covalent bonds."}, {"id": "s406", "l": "S1-4", "t": "mcq", "q": "Ionic compounds have:", "o": ["high melting and boiling points", "low melting and boiling points", "no ability to dissolve in water at all", "solutions that never conduct electricity"], "a": 0, "e": "Ionic compounds have high melting and boiling points, most dissolve in water, and their solutions conduct electricity. Covalent compounds have low melting and boiling points."}, {"id": "s407", "l": "S1-4", "t": "mcq", "q": "In magnesium oxide (MgO), the magnesium ion carries the charge:", "o": ["2+", "1+", "2−", "1−"], "a": 0, "e": "Magnesium (2, 8, 2) loses its 2 outer electrons, so it becomes Mg²⁺. Oxygen gains them and becomes O²⁻."}, {"id": "s501", "l": "S2-1", "t": "mcq", "q": "When a glass rod is rubbed with silk, the glass acquires:", "o": ["a positive charge", "a negative charge", "no charge", "a magnetic pole"], "a": 0, "e": "Glass comes before silk in the electrostatic series, so glass becomes positive and silk becomes negative."}, {"id": "s502", "l": "S2-1", "t": "mcq", "q": "When an ebonite rod is rubbed with silk, the ebonite surface acquires:", "o": ["a negative charge", "a positive charge", "no charge", "both charges"], "a": 0, "e": "Silk comes before ebonite in the electrostatic series, so silk becomes positive and ebonite becomes negative."}, {"id": "s503", "l": "S2-1", "t": "mcq", "q": "Two objects carrying the same type of electric charge:", "o": ["repel each other", "attract each other", "do not affect each other", "become neutral"], "a": 0, "e": "Like charges repel, unlike charges attract."}, {"id": "s504", "l": "S2-1", "t": "mcq", "q": "Electric field lines:", "o": ["start from the positive charge and end at the negative charge", "start from the negative charge and end at the positive charge", "intersect each other", "can be seen with the naked eye"], "a": 0, "e": "Electric field lines are imaginary, do not intersect, and start from the positive charge and end at the negative charge."}, {"id": "s505", "l": "S2-1", "t": "mcq", "q": "The device used to identify the type of charge on a charged object is the:", "o": ["electroscope", "coulometer", "compass", "lightning rod"], "a": 0, "e": "The electroscope determines the electric state, identifies the type of charge and compares charges. The coulometer measures weak charges."}, {"id": "s506", "l": "S2-1", "t": "mcq", "q": "Fuel transport vehicles have metal chains dangling to the ground in order to:", "o": ["discharge electrostatic charges", "make the truck heavier", "produce electricity", "attract the clouds"], "a": 0, "e": "The metal chain carries the accumulated static charges safely to the ground, preventing sparks near the fuel."}, {"id": "s507", "l": "S2-1", "t": "mcq", "q": "The importance of the lightning rod is that it:", "o": ["protects buildings from lightning strikes", "produces a uniform paint layer", "measures weak electric charges", "charges the clouds"], "a": 0, "e": "The lightning rod discharges the charges of nearby clouds to the ground without damage, protecting buildings and installations."}, {"id": "s601", "l": "S2-2", "t": "mcq", "q": "Which of the following is a magnetic material?", "o": ["Nickel", "Copper", "Aluminum", "Gold"], "a": 0, "e": "Magnetic materials (attracted to a magnet): iron, nickel, cobalt, soft iron. Copper, aluminum, silver and gold are non-magnetic."}, {"id": "s602", "l": "S2-2", "t": "mcq", "q": "The attraction force of a magnet is strongest at:", "o": ["its poles", "its middle", "all points equally", "its middle and one pole"], "a": 0, "e": "The magnetic force is strongest at the poles and decreases toward the middle; that is why iron filings gather at the poles."}, {"id": "s603", "l": "S2-2", "t": "mcq", "q": "When a bar magnet is freely suspended, its north pole points towards:", "o": ["the Earth's geographical North", "the Earth's geographical South", "the East", "the West"], "a": 0, "e": "A freely suspended magnet always rests in the north–south direction: its north pole points to the geographical North."}, {"id": "s604", "l": "S2-2", "t": "mcq", "q": "The box of a compass is made of copper or plastic so that:", "o": ["it does not attract the needle or affect its movement", "it attracts the needle strongly", "the compass becomes heavier", "it produces a magnetic field"], "a": 0, "e": "Copper and plastic are non-magnetic, so no attraction happens between the needle and the box."}, {"id": "s605", "l": "S2-2", "t": "mcq", "q": "Magnetic field lines:", "o": ["start from the north pole and end at the south pole", "start from the south pole and end at the north pole", "start from the middle of the magnet", "intersect each other at the poles"], "a": 0, "e": "Magnetic field lines go from N to S, do not intersect, and are crowded at the poles."}, {"id": "s606", "l": "S2-2", "t": "mcq", "q": "When a magnet is brought near a mixture of copper filings, iron filings and sand:", "o": ["only the iron filings are attracted", "all of them are attracted", "only the copper filings are attracted", "nothing is attracted"], "a": 0, "e": "Only iron is a magnetic material here; copper and sand are not attracted."}, {"id": "s607", "l": "S2-2", "t": "num", "q": "A bar magnet is cut into 3 pieces. How many magnetic poles are there in total?", "a": 6, "e": "Each piece becomes a new magnet with a north and a south pole: 3 × 2 = 6 poles."}, {"id": "s701", "l": "S2-3", "t": "num", "q": "Find the weight (in newtons) of a 50 kg object on the Earth's surface. (g = 10 N/kg)", "a": 500, "e": "Weight W = m × g = 50 × 10 = 500 N."}, {"id": "s702", "l": "S2-3", "t": "num", "q": "An astronaut's mass is 60 kg. What is his weight on the Moon in newtons? (Earth g = 10 N/kg, Moon g = 1/6 of Earth's)", "a": 100, "e": "Mass stays 60 kg. Moon g = 10 ÷ 6. Weight = 60 × 10 ÷ 6 = 100 N."}, {"id": "s703", "l": "S2-3", "t": "mcq", "q": "Which of the following is a contact force?", "o": ["Friction force", "Magnetic force", "Gravitational force", "Electrostatic force"], "a": 0, "e": "Contact forces act only when objects touch (friction, collision, elastic). Magnetic, gravitational and electrostatic forces are field forces."}, {"id": "s704", "l": "S2-3", "t": "mcq", "q": "The gravitational attraction force between two objects decreases when:", "o": ["the squared distance between their centers increases", "their masses increase", "they get closer", "nothing changes"], "a": 0, "e": "It increases with bigger masses and decreases with a bigger squared distance between the centers."}, {"id": "s705", "l": "S2-3", "t": "mcq", "q": "Tides occur:", "o": ["twice daily (once every 12 hours)", "once a month", "once a year", "only during full moon"], "a": 0, "e": "Tides happen regularly twice a day because of the gravity between the Earth and the Moon; they peak at new moon and full moon."}, {"id": "s706", "l": "S2-3", "t": "mcq", "q": "Weight is measured in:", "o": ["newtons (N)", "kilograms (kg)", "N/kg", "meters (m)"], "a": 0, "e": "Weight is a force, measured in newtons. Mass is measured in kilograms and stays constant from place to place."}, {"id": "s707", "l": "S2-3", "t": "mcq", "q": "Gravitational forces are:", "o": ["attractive forces only", "repulsive forces only", "attractive and repulsive", "neither attractive nor repulsive"], "a": 0, "e": "Electric and magnetic forces can attract or repel, but gravitational forces only attract."}]};
+const STATIC = true; // true on GitHub Pages: no Claude storage, parent page behind a PIN
+const BUILTIN_VIDEOS = {}; // lesson id -> {url}, filled in by Claude when a video is ready
+const SUBJECTS = DATA.subjects, LESSONS = DATA.lessons, QUESTIONS = DATA.questions;
+const SMAP = Object.fromEntries(SUBJECTS.map(x=>[x.id,x]));
+const code = l => l.code || l.id;
+const LMAP = Object.fromEntries(LESSONS.map(l=>[l.id,l]));
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS = {get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- storage: artifact db, with local fallback ---------- */
+let db=null, dbState='loading', isParent=false;
+let attempts=[], videos={};
+const store = {
+  async saveAttempt(a){
+    if(db){
+      try{ await db.collection('attempts').doc(a.id).set(a); return true; }
+      catch(e){
+        if(e && e.code==='unavailable'){ await new Promise(r=>setTimeout(r,800+Math.random()*800)); try{await db.collection('attempts').doc(a.id).set(a);return true}catch(_){}}
+        showNote('مقدرناش نحفظ النتيجة على الموقع دلوقتي'+(e&&e.code==='quota_exceeded'?' (المساحة اتملت)':'')+'، اتحفظت على الجهاز ده بس.');
+      }
+    }
+    const loc=LS.get('mp1_attempts',[]); loc.push(a); LS.set('mp1_attempts',loc);
+    if(!db){ attempts=loc.slice(); renderParent(); }
+    return false;
+  },
+  async saveVideo(lid,url){
+    const key='L'+lid;
+    if(db){ try{ if(url) await db.collection('videos').doc(key).set({lesson:lid,url,by:'parent',updatedAt:new Date().toISOString()}); else await db.collection('videos').doc(key).delete(); return true;}catch(e){ showNote('مقدرناش نحفظ رابط الفيديو. ممكن يكون عندك صلاحية عرض بس.'); return false; } }
+    const v=LS.get('mp1_videos',{}); if(url) v[lid]={url}; else delete v[lid]; LS.set('mp1_videos',v); videos=v; renderParent(); return true;
+  }
+};
+function showNote(t){const n=$('#dbNote');n.textContent=t;n.classList.remove('hide')}
+
+(async function initDb(){
+  attempts=LS.get('mp1_attempts',[]); videos=Object.assign({},BUILTIN_VIDEOS,LS.get('mp1_videos',{}));
+  let timer=setTimeout(()=>{ if(dbState==='loading'){ showNote('لسه بنحمّل النتايج المحفوظة… لو اتأخرت، ممكن تكون مش متاحة دلوقتي.'); } },10000);
+  try{
+    if(STATIC || !window.claude || !window.claude.use) throw 0;
+    db = await window.claude.use('db');
+  }catch(e){ db=null; }
+  if(!db){ clearTimeout(timer); dbState='local'; if(!STATIC) showNote('النتايج بتتحفظ على الجهاز ده. بعد كل امتحان ابعتي النتيجة لبابا من زرار واتساب.'); renderParent(); return; }
+  dbState='live';
+  db.collection('attempts').orderBy('ts','desc').onSnapshot(snap=>{
+    if(!snap.metadata.fromCache){ clearTimeout(timer); $('#dbNote').classList.add('hide'); }
+    attempts=snap.docs.map(d=>d.data()); renderParent();
+  }, err=>{ clearTimeout(timer); showNote('مقدرناش نوصل للنتايج المحفوظة دلوقتي.'); });
+  db.collection('videos').onSnapshot(snap=>{
+    const v=Object.assign({},BUILTIN_VIDEOS); snap.docs.forEach(d=>{const x=d.data(); if(x&&x.lesson&&x.url) v[x.lesson]=x;}); videos=v; renderParent();
+    if(!$('#vResult').classList.contains('hide') && lastResult) renderResult(lastResult);
+  }, ()=>{});
+})();
+
+/* ---------- helpers ---------- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function level(p){ if(p>=85) return {c:'ok',t:'ممتاز'}; if(p>=60) return {c:'mid',t:'جيد – محتاج تدريب'}; return {c:'bad',t:'محتاج شرح'}; }
+function parseNum(s){
+  if(s==null) return NaN;
+  s=String(s).trim().replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[−–—]/g,'-').replace(/٫/g,'.').replace(/\s+/g,'').replace(/(LE|le|km|cm|%|جنيه|كم)$/,'');
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,'');
+  else s=s.replace(',','.');
+  const fr=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/); if(fr) return parseFloat(fr[1])/parseFloat(fr[2]);
+  if(!/^-?\d*\.?\d+$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+function isRight(q,ans){
+  if(ans==null || ans==='') return false;
+  if(q.t==='mcq') return ans===q.a;
+  const v=parseNum(ans); return !isNaN(v) && Math.abs(v-q.a)<1e-6;
+}
+function fmtDate(iso){try{return new Date(iso).toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return iso}}
+function b64e(str){const by=new TextEncoder().encode(str);let b='';by.forEach(x=>b+=String.fromCharCode(x));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function b64d(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s);return new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0)));}
+function encodeAttempt(a){const p={};Object.entries(a.perLesson).forEach(([k,x])=>p[k]=[x.c,x.t]);
+  return 'MP1-'+b64e(JSON.stringify({i:a.id,n:a.name,m:a.mode,s:a.ts,p,w:a.wrong.map(w=>w.id),mi:a.minutes}));}
+function decodeAttempt(text){const m=String(text).match(/MP1-([A-Za-z0-9_-]+)/);if(!m) throw new Error('nocode');
+  const o=JSON.parse(b64d(m[1]));const per={};let c=0,t=0;
+  Object.entries(o.p||{}).forEach(([k,v])=>{if(!LMAP[k]||!Array.isArray(v))return;const cc=Math.max(0,Math.min(+v[0]||0,+v[1]||0)),tt=Math.max(0,+v[1]||0);per[k]={c:cc,t:tt};c+=cc;t+=tt;});
+  if(!t) throw new Error('empty');
+  const id=String(o.i||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||('a'+Date.now().toString(36));
+  return {id,name:String(o.n||'').slice(0,40),mode:String(o.m||''),ts:isNaN(Date.parse(o.s))?new Date().toISOString():new Date(o.s).toISOString(),
+    total:t,correct:c,pct:Math.round(c/t*100),perLesson:per,wrong:(o.w||[]).filter(x=>typeof x==='string').slice(0,60).map(id=>({id,ans:''})),minutes:+o.mi||null,via:'whatsapp'};}
+function waText(a){const lines=Object.keys(a.perLesson).sort().map(k=>{const x=a.perLesson[k];return `${code(LMAP[k])} ${LMAP[k].ar}: ${x.c}/${x.t}`;});
+  return `نتيجة ${a.name} – ${modeName(a.mode)}\nالدرجة: ${a.correct}/${a.total} (${a.pct}%)\n${lines.join('\n')}\n\nالكود:\n${encodeAttempt(a)}`;}
+function modeName(m){ m=String(m||''); if(m==='all'||m==='u1'||m==='u2') m='math:'+m;
+  if(m.startsWith('L:')){const l=LMAP[m.slice(2)];return l?`${SMAP[l.subject].ar} · تدريب درس ${code(l)} ${l.ar}`:'تدريب';}
+  const [sj,part]=m.split(':'); const x=SMAP[sj]; if(!x) return m;
+  return x.ar+' · '+(part==='all'?'امتحان شامل':'امتحان الوحدة '+part.slice(1)); }
+
+/* ---------- home ---------- */
+$('#subjGrid').innerHTML=SUBJECTS.map(x=>{const n=QUESTIONS.filter(q=>LMAP[q.l].subject===x.id).length;
+  return `<button class="subj ${x.live?'':'off'}" data-subj="${x.id}" ${x.live?'':'disabled'}>${x.live?'':'<span class="soon">قريبًا</span>'}<div class="ic">${x.icon}</div><b>${esc(x.ar)}</b><span>${esc(x.en)}${x.live?' · '+n+' سؤال':''}</span></button>`}).join('');
+$('#stName').value=LS.get('mp1_name','');
+let curSubj=null;
+function needName(){const name=$('#stName').value.trim(); if(!name){ $('#stName').focus(); $('#stName').style.borderColor='var(--bad)'; $('#stName').placeholder='اكتبي اسمك الأول'; return null;} LS.set('mp1_name',name); return name;}
+function openSubject(id){
+  const x=SMAP[id]; if(!x||!x.live) return; curSubj=id;
+  const qs=QUESTIONS.filter(q=>LMAP[q.l].subject===id), units=[...new Set(LESSONS.filter(l=>l.subject===id).map(l=>l.unit))].sort();
+  $('#sjTitle').textContent=`${x.icon} ${x.ar} – ${x.en}`;
+  const colors=['var(--u1)','var(--u2)','#14945A','#C2410C'];
+  let html=units.length>1?`<button class="mode" data-mode="${id}:all"><span class="tag" style="background:linear-gradient(90deg,var(--u1),var(--u2))">UNIT ${units.join(' + ')}</span><b>امتحان شامل</b><span>كل الدروس – ${qs.length} سؤال. النتيجة في الآخر.</span></button>`:'';
+  html+=units.map((u,i)=>{const un=(x.units||{})[u]||{};const n=qs.filter(q=>LMAP[q.l].unit===u).length;
+    return `<button class="mode" data-mode="${id}:u${u}"><span class="tag" style="background:${colors[i%4]}">UNIT ${u}</span><b>${esc(un.en||'Unit '+u)}</b><span>${esc(un.ar||'')} – ${n} سؤال</span></button>`}).join('');
+  $('#sjModes').innerHTML=html;
+  $('#lessonChips').innerHTML=LESSONS.filter(l=>l.subject===id).map(l=>`<button class="chip" data-lesson="${l.id}"><span class="n">${code(l)}</span>${esc(l.ar)}</button>`).join('');
+  document.querySelectorAll('#sjModes .mode').forEach(b=>b.onclick=()=>start(b.dataset.mode));
+  document.querySelectorAll('#lessonChips .chip').forEach(b=>b.onclick=()=>start('L:'+b.dataset.lesson));
+  show('vSubject');
+}
+document.querySelectorAll('.subj[data-subj]').forEach(b=>b.onclick=()=>{ if(needName()) openSubject(b.dataset.subj); });
+$('#backHome').onclick=()=>show('vHome');
+
+/* ---------- quiz ---------- */
+let S=null, lastResult=null;
+function start(mode){
+  const name=needName(); if(!name){ show('vHome'); return; }
+  let qs;
+  if(mode.startsWith('L:')) qs=QUESTIONS.filter(q=>q.l===mode.slice(2));
+  else { const [sj,part]=mode.split(':'); qs=QUESTIONS.filter(q=>LMAP[q.l].subject===sj && (part==='all' || 'u'+LMAP[q.l].unit===part)); }
+  const practice = mode.startsWith('L:');
+  curSubj = practice ? LMAP[mode.slice(2)].subject : mode.split(':')[0];
+  qs = practice ? shuffle(qs) : qs.slice();
+  S={mode,name,practice,i:0,items:qs.map(q=>({q,order:q.t==='mcq'?shuffle(q.o.map((_,k)=>k)):null,ans:null,checked:false})),t0:Date.now()};
+  show('vQuiz'); renderQ();
+}
+function renderQ(){
+  const it=S.items[S.i], q=it.q, l=LMAP[q.l];
+  $('#qBar').style.width=((S.i)/S.items.length*100)+'%';
+  $('#qCount').textContent=`سؤال ${S.i+1} من ${S.items.length}`;
+  $('#qLesson').textContent=`${SMAP[l.subject].ar} · ${code(l)} · ${l.ar}`;
+  $('#qText').textContent=q.q;
+  const locked = S.practice && it.checked;
+  if(q.t==='mcq'){
+    $('#qBody').innerHTML='<div class="opts">'+it.order.map((k,pos)=>{
+      let cls='opt'; if(it.ans===k) cls+=' sel';
+      if(locked){ if(k===q.a) cls='opt right'; else if(it.ans===k) cls='opt wrong'; }
+      return `<button class="${cls}" data-k="${k}" ${locked?'disabled':''}><span class="k">${'abcd'[pos]}</span><span>${esc(q.o[k])}</span></button>`;
+    }).join('')+'</div>';
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ it.ans=+b.dataset.k; renderQ(); });
+  } else {
+    $('#qBody').innerHTML=`<input type="text" inputmode="decimal" class="numin" id="numIn" placeholder="Your answer" ${locked?'disabled':''} value="${esc(it.ans??'')}"><div class="hint">اكتبي الرقم بس (ممكن سالب أو عشري زي 13.5 أو كسر زي 3/4)</div>`;
+    const inp=$('#numIn'); inp.oninput=()=>{it.ans=inp.value; updateBtns();}; inp.onkeydown=e=>{if(e.key==='Enter'){ if(S.practice&&!it.checked) check(); else next(); }};
+    if(!locked) setTimeout(()=>inp.focus(),30);
+  }
+  const fb=$('#qFeedback');
+  if(locked){
+    const ok=isRight(q,it.ans);
+    fb.innerHTML=`<div class="feedback ${ok?'ok':'bad'}"><b>${ok?'✔ إجابة صحيحة!':'✘ إجابة غير صحيحة'}</b>${ok?'':`<div class="ex"><b>Correct answer:</b> ${esc(q.t==='mcq'?q.o[q.a]:q.a)}</div>`}<div class="ex">${esc(q.e)}</div></div>`;
+  } else fb.innerHTML='';
+  updateBtns();
+}
+function updateBtns(){
+  const it=S.items[S.i], last=S.i===S.items.length-1;
+  $('#btnPrev').disabled=S.i===0;
+  const hasAns = it.ans!=null && it.ans!=='';
+  if(S.practice && !it.checked){ $('#btnCheck').classList.remove('hide'); $('#btnCheck').disabled=!hasAns; $('#btnNext').classList.add('hide'); }
+  else { $('#btnCheck').classList.add('hide'); $('#btnNext').classList.remove('hide'); }
+  $('#btnNext').textContent= last ? 'إنهاء وعرض النتيجة' : (hasAns||S.practice ? 'التالي' : 'تخطّي');
+}
+function check(){ const it=S.items[S.i]; if(it.ans==null||it.ans==='') return; it.checked=true; renderQ(); }
+function next(){ if(S.i<S.items.length-1){S.i++;renderQ();} else finish(); }
+$('#btnCheck').onclick=check;
+$('#btnNext').onclick=next;
+$('#btnPrev').onclick=()=>{ if(S.i>0){S.i--;renderQ();} };
+$('#btnQuit').onclick=()=>{ const answered=S.items.filter(x=>x.ans!=null&&x.ans!=='').length; if(answered===0){curSubj?openSubject(curSubj):show('vHome');return;} $('#btnQuit').textContent= $('#btnQuit').dataset.c ? 'إنهاء والرجوع' : 'اضغطي تاني عشان تخرجي بدون حفظ'; if($('#btnQuit').dataset.c){delete $('#btnQuit').dataset.c; curSubj?openSubject(curSubj):show('vHome');} else $('#btnQuit').dataset.c='1'; };
+
+async function finish(){
+  const per={}; const wrong=[]; let correct=0;
+  S.items.forEach(it=>{ const q=it.q; per[q.l]=per[q.l]||{c:0,t:0}; per[q.l].t++; const ok=isRight(q,it.ans); if(ok){per[q.l].c++;correct++;} else wrong.push({id:q.id,ans:it.ans==null?'':(q.t==='mcq'?q.o[it.ans]:String(it.ans))}); });
+  const a={id:'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:S.name, mode:S.mode, ts:new Date().toISOString(),
+    total:S.items.length, correct, pct:Math.round(correct/S.items.length*100), perLesson:per, wrong, minutes:Math.max(1,Math.round((Date.now()-S.t0)/60000))};
+  lastResult=a; renderResult(a); show('vResult');
+  await store.saveAttempt(a);
+}
+
+/* ---------- result ---------- */
+function ring(p){const r=50,c=2*Math.PI*r,L=level(p);const col=getComputedStyle(document.documentElement).getPropertyValue(L.c==='ok'?'--ok':L.c==='mid'?'--mid':'--bad');
+  return `<svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle">${p}%</text></svg>`;}
+function videoBlock(lid){
+  const v=videos[lid];
+  if(v&&v.url) return `<div class="vid">🎬 <a href="${esc(v.url)}" target="_blank" rel="noopener">شوفي فيديو شرح الدرس</a></div>`;
+  return `<div class="vid muted tiny">🎬 فيديو الشرح للدرس ده لسه بيتجهز. بابا هيطلبه من Claude.</div>`;
+}
+function renderResult(a){
+  const L=level(a.pct);
+  const lorder=k=>LESSONS.findIndex(l=>l.id===k);
+  const rows=Object.keys(a.perLesson).sort((x,y)=>lorder(x)-lorder(y)).map(lid=>{const x=a.perLesson[lid],p=Math.round(x.c/x.t*100),lv=level(p),l=LMAP[lid];
+    return `<div class="lrow"><div class="nm">${code(l)} · ${esc(l.ar)}<small>${esc(l.en)}</small></div><div class="bar ${lv.c}"><i style="width:${p}%"></i></div><div class="pct">${x.c}/${x.t} <span class="pill ${lv.c}">${p}%</span></div></div>`;}).join('');
+  const weak=Object.keys(a.perLesson).sort((x,y)=>lorder(x)-lorder(y)).filter(lid=>{const x=a.perLesson[lid];return x.c/x.t*100<60;});
+  const weakHtml = weak.length ? `<div class="card"><h3>دروس محتاجة شرح</h3>${weak.map(lid=>{const l=LMAP[lid];return `<div class="weak"><div class="t">${code(l)} · ${esc(l.ar)} <span class="tiny" style="font-family:Inter">(${esc(l.en)})</span></div>${videoBlock(lid)}</div>`}).join('')}</div>`
+    : `<div class="card"><h3>🎉 مفيش دروس ضعيفة!</h3><p class="muted" style="margin:0">كل الدروس 60% أو أكتر. كمّلي تدريب على اللي لونه أصفر.</p></div>`;
+  const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+  const rev=a.wrong.map(w=>{const q=qmap[w.id];if(!q)return'';const l=LMAP[q.l];
+    return `<div class="review"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div><div class="ans">Your answer: <span class="you">${esc(w.ans||'(no answer)')}</span> · Correct: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
+  $('#vResult').innerHTML=`
+    <div class="card"><div class="score">${ring(a.pct)}<div><h2>برافو يا ${esc(a.name)}!</h2><div class="muted">${esc(modeName(a.mode))} · ${a.correct} من ${a.total} صح</div><div style="margin-top:8px"><span class="lvl ${L.c}">${L.t}</span></div></div></div></div>
+    <div class="card"><h3>النتيجة في كل درس</h3>${rows}</div>
+    ${weakHtml}
+    ${a.wrong.length?`<div class="card"><h3>راجعي الأسئلة الغلط (${a.wrong.length})</h3>${rev}</div>`:''}
+    <div class="card share"><h3>📲 ابعتي النتيجة لبابا</h3><p class="muted tiny" style="margin:0 0 10px">هيتفتح واتساب ومعاه رسالة النتيجة جاهزة، اختاري بابا وابعتي.</p>
+      <div class="row"><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(waText(a))}" target="_blank" rel="noopener">واتساب</a><button class="btn ghost" id="rCopy">نسخ النتيجة</button><span id="rCopyMsg" class="tiny muted"></span></div></div>
+    <div class="row"><button class="btn" id="rAgain">اختبار تاني</button>${isParent?'<button class="btn ghost" id="rParent">عرض المتابعة</button>':''}</div>`;
+  $('#rAgain').onclick=()=>{ if(curSubj) openSubject(curSubj); else show('vHome'); };
+  $('#rCopy').onclick=async()=>{try{await navigator.clipboard.writeText(waText(a));$('#rCopyMsg').textContent='✓ اتنسخت';}catch(e){$('#rCopyMsg').textContent='النسخ مش متاح هنا، استخدمي زرار واتساب';}};
+  if(isParent) $('#rParent').onclick=()=>{setTab('parent')};
+}
+
+/* ---------- parent ---------- */
+function renderParent(){
+  // per-lesson: latest vs first, from attempts sorted by time
+  const sorted=attempts.slice().sort((x,y)=>x.ts<y.ts?-1:1);
+  const hist={}; sorted.forEach(a=>{Object.entries(a.perLesson||{}).forEach(([lid,x])=>{(hist[lid]=hist[lid]||[]).push({p:Math.round(x.c/x.t*100),ts:a.ts});});});
+  $('#pLessons').innerHTML=SUBJECTS.filter(x=>x.live).map(x=>`<div class="subjhead">${x.icon} ${esc(x.ar)}</div>`+LESSONS.filter(l=>l.subject===x.id).map(l=>{const h=hist[l.id];
+    if(!h) return `<div class="lrow"><div class="nm">${code(l)} · ${esc(l.ar)}<small>${esc(l.en)}</small></div><div class="bar"><i style="width:0"></i></div><div class="pct"><span class="pill none">لسه</span></div></div>`;
+    const last=h[h.length-1].p, first=h[0].p, lv=level(last), d=last-first;
+    const trend = h.length>1 ? `<span class="tiny" style="font-family:Inter;color:${d>0?'var(--ok)':d<0?'var(--bad)':'var(--muted)'}">${d>0?'▲ +':d<0?'▼ ':'= '}${d}</span>` : '';
+    return `<div class="lrow"><div class="nm">${code(l)} · ${esc(l.ar)}<small>${esc(l.en)} · ${h.length} ${h.length===1?'attempt':'attempts'}</small></div><div class="bar ${lv.c}"><i style="width:${last}%"></i></div><div class="pct"><span class="pill ${lv.c}">${last}%</span> ${trend}</div></div>`;}).join('')).join('');
+  const recent=attempts.slice().sort((x,y)=>x.ts<y.ts?1:-1);
+  $('#pAttempts').innerHTML= recent.length ? recent.map(a=>{const lv=level(a.pct);
+    const per=Object.keys(a.perLesson||{}).sort().map(lid=>{const x=a.perLesson[lid],p=Math.round(x.c/x.t*100),L=LMAP[lid];return `<tr><td>${L?code(L)+' · '+esc(L.ar):esc(lid)}</td><td class="num">${x.c}/${x.t}</td><td><span class="pill ${level(p).c}">${p}%</span></td></tr>`}).join('');
+    return `<details class="att"><summary><span><b>${esc(a.name)}</b> · <span class="muted tiny">${esc(modeName(a.mode))}</span></span><span class="row"><span class="muted tiny">${fmtDate(a.ts)}</span><span class="pill ${lv.c}">${a.correct}/${a.total} · ${a.pct}%</span></span></summary><div class="body"><table><tr><th>الدرس</th><th>صح</th><th>النسبة</th></tr>${per}</table><div class="muted tiny" style="margin-top:6px">الوقت تقريبًا ${a.minutes||'-'} دقيقة · أسئلة غلط: ${(a.wrong||[]).length}</div></div></details>`}).join('')
+    : `<div class="empty">لسه مفيش محاولات. أول ما بنتك تحل اختبار هيظهر هنا.</div>`;
+  if(STATIC){ $('#pVideos').innerHTML='<p class="muted" style="margin:0">ابعت لـ Claude نتيجة بنتك، وهو هيعمل فيديو شرح للدروس الضعيفة ويضيفه للموقع. الفيديو هيظهر لبنتك تلقائيًا في نتيجتها.</p>'+LESSONS.filter(l=>videos[l.id]).map(l=>`<div class="vid">🎬 ${code(l)} ${esc(l.ar)}: <a href="${esc(videos[l.id].url)}" target="_blank" rel="noopener">الفيديو</a></div>`).join(''); }
+  else $('#pVideos').innerHTML=LESSONS.filter(l=>SMAP[l.subject].live).map(l=>{const v=videos[l.id];
+    return `<div class="lrow" style="grid-template-columns:minmax(150px,1fr) 2fr auto"><div class="nm"><span class="tiny muted">${esc(SMAP[l.subject].ar)}</span><br>${code(l)} · ${esc(l.ar)}</div><input type="url" dir="ltr" placeholder="https://..." data-vl="${l.id}" value="${esc(v&&v.url||'')}"><button class="btn ghost" data-vs="${l.id}" style="padding:8px 14px">حفظ</button></div>`}).join('');
+  if(!STATIC) document.querySelectorAll('[data-vs]').forEach(b=>b.onclick=async()=>{const lid=b.dataset.vs,inp=document.querySelector(`[data-vl="${lid}"]`),url=inp.value.trim();
+    if(url && !/^https:\/\//i.test(url)){inp.style.borderColor='var(--bad)';return;} b.disabled=true; const ok=await store.saveVideo(lid,url); b.disabled=false; if(ok){b.textContent='✓ اتحفظ';setTimeout(()=>b.textContent='حفظ',1500);} });
+}
+
+$('#impBtn').onclick=async()=>{const msg=$('#impMsg');let a;
+  try{a=decodeAttempt($('#impText').value);}catch(e){msg.style.color='var(--bad)';msg.textContent='مش لاقي كود نتيجة صحيح (بيبدأ بـ MP1-). اتأكد إنك لزقت الرسالة كلها.';return;}
+  if(attempts.some(x=>x.id===a.id)){msg.style.color='var(--mid)';msg.textContent='النتيجة دي متضافة قبل كده.';return;}
+  $('#impBtn').disabled=true; const ok=await store.saveAttempt(a); $('#impBtn').disabled=false;
+  msg.style.color='var(--ok)'; msg.textContent=`✓ اتضافت نتيجة ${a.name}: ${a.correct}/${a.total}`+(ok||STATIC?'':' (على الجهاز ده)'); $('#impText').value='';};
+
+/* ---------- views ---------- */
+function show(id){['vHome','vSubject','vQuiz','vResult','vParent','vPin'].forEach(v=>$('#'+v).classList.toggle('hide',v!==id)); window.scrollTo(0,0);}
+function setTab(t){ $('#tabStudent').classList.toggle('on',t==='student'); $('#tabParent').classList.toggle('on',t==='parent');
+  if(t==='parent'){ if(!isParent) return; renderParent(); show('vParent'); if(!STATIC) location.hash='progress'; } else { show(S&&!$('#vQuiz').classList.contains('hide')?'vQuiz':'vHome'); if(location.hash) history.replaceState(null,'',location.pathname+location.search); } }
+$('#tabStudent').onclick=()=>{ if(!$('#vQuiz').classList.contains('hide')) return; setTab('student'); };
+$('#tabParent').onclick=()=>{ if(!$('#vQuiz').classList.contains('hide')) return; setTab('parent'); };
+renderParent();
+async function sha(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('prep1:'+t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){return 'x'+t;}}
+function openPin(){ const has=!!LS.get('mp1_pin',null);
+  $('#pinHint').textContent= has ? 'اكتب الرقم السري.' : 'أول مرة: اختار رقم سري (4 أرقام أو أكتر) هيتطلب منك كل مرة على الجهاز ده.';
+  $('#pinIn').value=''; $('#pinMsg').textContent=''; show('vPin'); setTimeout(()=>$('#pinIn').focus(),50); }
+async function tryPin(){ const v=$('#pinIn').value.trim(); if(!/^\d{4,8}$/.test(v)){ $('#pinMsg').textContent='اكتب من 4 لـ 8 أرقام'; return; }
+  const h=await sha(v), saved=LS.get('mp1_pin',null);
+  if(!saved){ LS.set('mp1_pin',h); } else if(saved!==h){ $('#pinMsg').textContent='الرقم غلط'; return; }
+  isParent=true; $('#tabs').classList.remove('hide'); setTab('parent'); }
+$('#pinBtn').onclick=tryPin; $('#pinIn').onkeydown=e=>{if(e.key==='Enter')tryPin();};
+$('#pinCancel').onclick=()=>{ history.replaceState(null,'',location.pathname); show('vHome'); };
+if(STATIC){ const chk=()=>{ if(location.hash==='#parent' && !isParent) openPin(); }; window.addEventListener('hashchange',chk); chk(); }
+(async function initUser(){
+  if(STATIC) return;
+  try{
+    const u = window.claude && window.claude.use ? await window.claude.use('user') : null;
+    if(u && typeof u.isOwner==='function' && await u.isOwner()===true){
+      isParent=true; $('#tabs').classList.remove('hide');
+      if(location.hash==='#progress') setTab('parent');
+      if(lastResult && !$('#vResult').classList.contains('hide')) renderResult(lastResult);
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
