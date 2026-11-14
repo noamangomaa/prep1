@@ -120,6 +120,8 @@ td.num{font-family:Inter;font-weight:600}
 .share{border:1.5px dashed var(--ok);background:var(--ok-soft);border-radius:14px;padding:16px}
 textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
 @media (max-width:560px){.lrow{grid-template-columns:1fr auto}.lrow .bar{grid-column:1/-1;order:3}.q{font-size:16.5px}.card{padding:16px}}
+.arq .q,.arq .opts,.arq .feedback .ex,.arq .ans,.review.arq .q{direction:rtl;text-align:right;font-family:inherit}
+.arq .q{font-size:19px;line-height:1.8}
 
 /* Logeen: bigger, friendlier look for a 3rd grader */
 body{background:linear-gradient(180deg,#FFF7E6 0%,#EAF6FF 100%) fixed}
@@ -242,7 +244,7 @@ const STATIC = true; // true on GitHub Pages: no Claude storage, parent page beh
 const BUILTIN_VIDEOS = {}; // lesson id -> {url}, filled in by Claude when a video is ready
 const SUBJECTS = DATA.subjects, LESSONS = DATA.lessons, QUESTIONS = DATA.questions;
 const SMAP = Object.fromEntries(SUBJECTS.map(x=>[x.id,x]));
-const code = l => l.code || l.id;
+const code = l => '\u2066'+(l.code || l.id)+'\u2069';
 const LMAP = Object.fromEntries(LESSONS.map(l=>[l.id,l]));
 const $ = s=>document.querySelector(s);
 const esc = s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -349,7 +351,7 @@ function openSubject(id){
   const colors=['var(--u1)','var(--u2)','#14945A','#C2410C'];
   let html=units.length>1?`<button class="mode" data-mode="${id}:all"><span class="tag" style="background:linear-gradient(90deg,var(--u1),var(--u2))">${esc(x.allTag||'UNIT '+units.join(' + '))}</span><b>امتحان شامل</b><span>كل الدروس – ${qs.length} سؤال. النتيجة في الآخر.</span></button>`:'';
   html+=units.map((u,i)=>{const un=(x.units||{})[u]||{};const n=qs.filter(q=>LMAP[q.l].unit===u).length;
-    return `<button class="mode" data-mode="${id}:u${u}"><span class="tag" style="background:${colors[i%4]}">${esc(un.tag||'UNIT '+u)}</span><b>${esc(un.en||'Unit '+u)}</b><span>${esc(un.ar||'')} – ${n} سؤال</span></button>`}).join('');
+    return `<button class="mode" data-mode="${id}:u${u}"><span class="tag" style="background:${colors[i%4]}">${esc(un.tag||'UNIT '+u)}</span><b>${esc((x.rtl?un.ar:un.en)||'Unit '+u)}</b><span>${esc((x.rtl?un.en:un.ar)||'')} – ${n} سؤال</span></button>`}).join('');
   $('#sjModes').innerHTML=html;
   $('#lessonChips').innerHTML=LESSONS.filter(l=>l.subject===id).map(l=>`<button class="chip" data-lesson="${l.id}"><span class="n">${code(l)}</span> <bdi>${esc(l.ar)}</bdi>${l.plan==='done'?' ✅':l.plan==='now'?' 📍':''}${videos[l.id]?' 🎬':''}</button>`).join('');
   const hasPlan=LESSONS.some(l=>l.subject===id&&l.plan);
@@ -402,13 +404,14 @@ function renderQ(){
   $('#qBar').style.width=((S.i)/S.items.length*100)+'%';
   $('#qCount').textContent=`سؤال ${S.i+1} من ${S.items.length}`;
   $('#qLesson').textContent=`${SMAP[l.subject].ar} · ${code(l)} · ${l.ar}`;
+  const RTL=!!SMAP[l.subject].rtl; $('#vQuiz').classList.toggle('arq',RTL);
   $('#qText').textContent=q.q;
   const locked = S.practice && it.checked;
   if(q.t==='mcq'){
     $('#qBody').innerHTML='<div class="opts">'+it.order.map((k,pos)=>{
       let cls='opt'; if(it.ans===k) cls+=' sel';
       if(locked){ if(k===q.a) cls='opt right'; else if(it.ans===k) cls='opt wrong'; }
-      return `<button class="${cls}" data-k="${k}" ${locked?'disabled':''}><span class="k">${'abcd'[pos]}</span><span>${esc(q.o[k])}</span></button>`;
+      return `<button class="${cls}" data-k="${k}" ${locked?'disabled':''}><span class="k">${(RTL?'أبجد':'abcd')[pos]}</span><span>${esc(q.o[k])}</span></button>`;
     }).join('')+'</div>';
     document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ it.ans=+b.dataset.k; saveProgress(); renderQ(); });
   } else {
@@ -420,7 +423,7 @@ function renderQ(){
   if(locked){
     const ok=isRight(q,it.ans);
     if(it.msg==null) it.msg = ok ? pick([`برافو يا ${S.first}! 🌟`,`شاطرة يا ${S.first}! 👏`,`ممتاز يا ${S.first}! 💪`,`كده صح يا ${S.first}! ✨`]) : pick([`ولا يهمك يا ${S.first}، شوفي الشرح 👇`,`قربتي يا ${S.first}! بصي على الشرح 👇`,`مش مشكلة يا ${S.first}، كده هتتعلمي 💡`]);
-    fb.innerHTML=`<div class="feedback ${ok?'ok':'bad'}"><b>${esc(it.msg)}</b>${ok?'':`<div class="ex"><b>Correct answer:</b> ${esc(q.t==='mcq'?q.o[q.a]:q.a)}</div>`}<div class="ex">${esc(q.e)}</div></div>`;
+    fb.innerHTML=`<div class="feedback ${ok?'ok':'bad'}"><b>${esc(it.msg)}</b>${ok?'':`<div class="ex"><b>${RTL?'الإجابة الصحيحة:':'Correct answer:'}</b> ${esc(q.t==='mcq'?q.o[q.a]:q.a)}</div>`}<div class="ex">${esc(q.e)}</div></div>`;
   } else fb.innerHTML='';
   updateBtns();
 }
@@ -472,7 +475,7 @@ function renderResult(a){
     : `<div class="card"><h3>🎉 مفيش دروس ضعيفة يا ${esc(String(a.name||'').split(/\s+/)[0])}!</h3><p class="muted" style="margin:0">كل الدروس 60% أو أكتر. كمّلي تدريب على اللي لونه أصفر وهتبقي 100% 💯</p></div>`;
   const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
   const rev=a.wrong.map(w=>{const q=qmap[w.id];if(!q)return'';const l=LMAP[q.l];
-    return `<div class="review"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div><div class="ans">Your answer: <span class="you">${esc(w.ans||'(no answer)')}</span> · Correct: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
+    return `<div class="review${SMAP[l.subject].rtl?' arq':''}"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div><div class="ans">${SMAP[l.subject].rtl?'إجابتك':'Your answer'}: <span class="you">${esc(w.ans||'(no answer)')}</span> · ${SMAP[l.subject].rtl?'الصح':'Correct'}: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
   $('#vResult').innerHTML=`
     <div class="card"><div class="score">${ring(a.pct)}<div><h2>${esc(resultMsg(a))}</h2><div class="muted">${esc(modeName(a.mode))} · ${a.correct} من ${a.total} صح</div><div style="margin-top:8px"><span class="lvl ${L.c}">${L.t}</span></div></div></div></div>
     <div class="card"><h3>النتيجة في كل درس</h3>${rows}</div>
