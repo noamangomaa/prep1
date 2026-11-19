@@ -122,6 +122,7 @@ textarea{width:100%;min-height:90px;font:500 14px Inter;direction:ltr;padding:10
 @media (max-width:560px){.lrow{grid-template-columns:1fr auto}.lrow .bar{grid-column:1/-1;order:3}.q{font-size:16.5px}.card{padding:16px}}
 .arq .q,.arq .opts,.arq .feedback .ex,.arq .ans,.review.arq .q{direction:rtl;text-align:right;font-family:inherit}
 .arq .q{font-size:19px;line-height:1.8}
+.qfig:empty{display:none}.qfig{margin:10px 0}.qfig svg{direction:ltr;unicode-bidi:isolate;display:block;width:100%;max-width:360px;height:auto;margin:0 auto;background:#fff;border-radius:12px}
 
 /* Logeen: bigger, friendlier look for a 3rd grader */
 body{background:linear-gradient(180deg,#FFF7E6 0%,#EAF6FF 100%) fixed}
@@ -185,6 +186,7 @@ h2{font-size:23px}
       <div class="bar"><i id="qBar" style="width:0"></i></div>
       <div class="qhead"><span id="qCount"></span><span class="lesson-tag" id="qLesson"></span></div>
       <div class="q" id="qText"></div>
+      <div class="qfig" id="qFig"></div>
       <div id="qBody"></div>
       <div id="qFeedback"></div>
       <div class="nav">
@@ -467,7 +469,7 @@ function renderQ(){
   $('#qCount').textContent=`سؤال ${S.i+1} من ${S.items.length}`;
   $('#qLesson').textContent=`${SMAP[l.subject].ar} · ${code(l)} · ${l.ar}`;
   const RTL=!!SMAP[l.subject].rtl; $('#vQuiz').classList.toggle('arq',RTL);
-  $('#qText').textContent=q.q;
+  $('#qText').textContent=q.q; $('#qFig').innerHTML=q.fig||'';
   const locked = S.practice && it.checked;
   if(q.t==='mcq'){
     $('#qBody').innerHTML='<div class="opts">'+it.order.map((k,pos)=>{
@@ -537,7 +539,7 @@ function renderResult(a){
     : `<div class="card"><h3>🎉 مفيش دروس ضعيفة يا ${esc(String(a.name||'').split(/\s+/)[0])}!</h3><p class="muted" style="margin:0">كل الدروس 60% أو أكتر. كمّلي تدريب على اللي لونه أصفر وهتبقي 100% 💯</p></div>`;
   const qmap=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
   const rev=a.wrong.map(w=>{const q=qmap[w.id];if(!q)return'';const l=LMAP[q.l];
-    return `<div class="review${SMAP[l.subject].rtl?' arq':''}"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div><div class="ans">${SMAP[l.subject].rtl?'إجابتك':'Your answer'}: <span class="you">${esc(w.ans||'(no answer)')}</span> · ${SMAP[l.subject].rtl?'الصح':'Correct'}: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
+    return `<div class="review${SMAP[l.subject].rtl?' arq':''}"><div class="tiny muted">${code(l)} · ${esc(l.ar)}</div><div class="q">${esc(q.q)}</div>${q.fig?`<div class="qfig">${q.fig}</div>`:''}<div class="ans">${SMAP[l.subject].rtl?'إجابتك':'Your answer'}: <span class="you">${esc(w.ans||'(no answer)')}</span> · ${SMAP[l.subject].rtl?'الصح':'Correct'}: <span class="cor">${esc(q.t==='mcq'?q.o[q.a]:q.a)}</span></div><div class="ans muted" style="margin-top:4px">${esc(q.e)}</div></div>`}).join('');
   $('#vResult').innerHTML=`
     <div class="card"><div class="score">${ring(a.pct)}<div><h2>${esc(resultMsg(a))}</h2><div class="muted">${esc(modeName(a.mode))} · ${a.correct} من ${a.total} صح</div><div style="margin-top:8px"><span class="lvl ${L.c}">${L.t}</span></div></div></div></div>
     <div class="card"><h3>النتيجة في كل درس</h3>${rows}</div>
