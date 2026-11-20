@@ -226,15 +226,25 @@ const NUM_EN=['zero','one','two','three','four','five','six','seven','eight','ni
 /* Claude's development plan. levels: lesson -> {lv, upd}. focus: lesson -> targets to repeat more. results: WhatsApp codes received */
 const TRACK={
  "results": [
-  "TK1-eyJpIjoiYW13bnFlOGIxam92aCIsIm0iOiJNMyIsInMiOiIyMDI2LTExLTE5VDE1OjU1OjAwLjg3N1oiLCJwIjp7Ik0zIjpbOCw4XX0sInciOltdLCJtaSI6Mn0"
+  "TK1-eyJpIjoiYW13bnFlOGIxam92aCIsIm0iOiJNMyIsInMiOiIyMDI2LTExLTE5VDE1OjU1OjAwLjg3N1oiLCJwIjp7Ik0zIjpbOCw4XX0sInciOltdLCJtaSI6Mn0",
+  "TK1-eyJpIjoiYW13bnFwOGU5aXdmcSIsIm0iOiJNMSIsInMiOiIyMDI2LTExLTE5VDE2OjAzOjM0LjIwOVoiLCJwIjp7Ik0xIjpbNiw4XX0sInciOlsiTTE6NyIsIk0xOjYiXSwibWkiOjF9"
  ],
  "levels": {
   "M3": {
    "lv": 2,
    "upd": 1
+  },
+  "M1": {
+   "lv": 1,
+   "upd": 1
   }
  },
- "focus": {},
+ "focus": {
+  "M1": [
+   6,
+   7
+  ]
+ },
  "updates": [
   {
    "d": "2026-11-19",
@@ -243,6 +253,10 @@ const TRACK={
   {
    "d": "2026-11-19",
    "note": "رياضيات «أنهي أكتر؟»: 8/8 (100%) ← تحديث 1: طلعت للمستوى 2. الأعداد لحد 10 بدل 5، والمجموعتين قريبين من بعض (الفرق 1–3) فلازم تعد كويس، وأسئلة جديدة «Which has fewer?» (أنهي أقل؟)."
+  },
+  {
+   "d": "2026-11-20",
+   "note": "«عدّي واختاري الرقم»: 6/8 (75%) – غلطت في 6 و 7 ← تحديث: نص أسئلة اللعبة بقت على عدّ 6 و 7 لحد ما تتقنهم. المستوى زي ما هو لحد 3 نجوم."
   }
  ]
 };
@@ -299,7 +313,7 @@ const GEN={
    return {key:t.l,voice:[[`Which one starts with ${t.l}?`,'en']],prompt:'Which one starts with',en:1,show:`<div class="show" style="font-family:'Baloo 2';font-weight:800;color:var(--blue)">${t.l}${t.l.toLowerCase()}</div>`,cls:'emo',opts:o.map(([w,ok])=>({html:w[1],ok,say:[w[0],'en']}))};},
  enCase(lid){const t=target(lid,enPool(lid),x=>x.l);const o=distract(enPool(lid),t,3,x=>x.l);
    return {key:t.l,voice:[[`Find small ${t.l}`,'en']],prompt:'Find the small letter',en:1,show:`<div class="show" style="font-family:'Baloo 2';font-weight:800;color:var(--purple)">${t.l}</div>`,opts:o.map(x=>({html:x.l.toLowerCase(),ok:x===t}))};},
- mCount(lid){const max=LV(lid)>=2?10:7;const n=1+rnd(max);const th=pick(THINGS);const o=distract([...Array(max+1).keys()].slice(1),n,3);
+ mCount(lid){const max=LV(lid)>=2?10:7;const F=((TRACK.focus||{})[lid])||[];const n=(F.length&&Math.random()<0.5)?pick(F):1+rnd(max);const th=pick(THINGS);const o=distract([...Array(max+1).keys()].slice(1),n,3);
    return {key:String(n),voice:[['How many? Count!','en']],prompt:'How many?',en:1,show:`<div class="count">${th.repeat(n)}</div>`,opts:o.map(x=>({html:x,ok:x===n,say:[NUM_EN[x],'en']})),after:[[NUM_EN[n],'en']]};},
  mHear(lid){const max=LV(lid)>=2?20:10;const n=1+rnd(max);const o=distract([...Array(max+1).keys()].slice(1),n,3);
    return {key:String(n),voice:[[`Find number ${NUM_EN[n]}`,'en']],prompt:'Find the number',en:1,opts:o.map(x=>({html:x,ok:x===n}))};},
