@@ -1,5 +1,5 @@
 // Offline support: page cached after first visit; newest version fetched when online.
-const V='noreen-1795204325', CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
+const V='noreen-1795219834', CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('noreen-')&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{

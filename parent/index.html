@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>متابعة البنات</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f6f5c">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6F8;--card:#fff;--ink:#1B2333;--muted:#667085;--line:#E4E7EE;--brand:#1f6f5c;
+  --ok:#14945A;--ok-soft:#E3F6EC;--mid:#B87700;--mid-soft:#FFF4DC;--bad:#D8384A;--bad-soft:#FDE8EA;
+  --n:#5b5bd6;--l:#e0457b;--t:#2DB3A6}
+@media (prefers-color-scheme:dark){:root{--bg:#10141C;--card:#1A2030;--ink:#E9ECF3;--muted:#9AA3B5;--line:#2A3245;--brand:#4fc3a1;
+  --ok:#3CCB86;--ok-soft:#173326;--mid:#F2B544;--mid-soft:#3A2E14;--bad:#FF6B7B;--bad-soft:#3D1D22}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,system-ui,sans-serif;font-size:15px;line-height:1.6}
+header{background:var(--brand);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+header h1{margin:0 0 10px;font-size:19px;font-weight:800}
+.tabs{display:flex;gap:4px;overflow-x:auto}
+.tabs button{flex:1;min-width:70px;border:0;background:transparent;color:#ffffffcc;font:inherit;font-weight:700;padding:8px 6px 10px;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button.on{color:#fff;border-bottom-color:#fff}
+main{max-width:760px;margin:0 auto;padding:14px 12px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 10px}h3{font-size:15px;margin:12px 0 6px}
+.muted{color:var(--muted)}.tiny{font-size:12.5px}
+.hide{display:none!important}
+.kids{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:12px}
+.kid{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:12px;cursor:pointer}
+.kid .nm{font-weight:800;font-size:17px}.kid .gr{color:var(--muted);font-size:12.5px;margin-top:-2px}
+.stats{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.stat{flex:1;min-width:60px;background:var(--bg);border-radius:10px;padding:6px 8px;text-align:center}
+.stat b{display:block;font-size:18px}.stat span{font-size:11.5px;color:var(--muted)}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12.5px;font-weight:700;background:var(--bg);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.mid{background:var(--mid-soft);color:var(--mid)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.who{display:inline-block;padding:0 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;background:var(--c)}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .t{min-width:0}.item .t small{display:block;color:var(--muted);font-size:12px}
+.bar{height:7px;background:var(--line);border-radius:9px;overflow:hidden;width:90px;flex:none}
+.bar i{display:block;height:100%;background:var(--ok)}.bar.mid i{background:var(--mid)}.bar.bad i{background:var(--bad)}
+.subj{font-weight:800;margin:10px 0 2px;padding-top:6px;border-top:1px dashed var(--line)}
+.subj:first-child{border-top:0;margin-top:0}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-weight:600}
+td.n{text-align:center}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+textarea,input{width:100%;font:inherit;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+textarea{min-height:80px;direction:ltr}
+details summary{cursor:pointer;color:var(--brand);font-weight:700;padding:6px 0}
+.code{direction:ltr;unicode-bidi:isolate;display:inline-block}
+#pin{max-width:340px;margin:60px auto;text-align:center}
+#pin input{text-align:center;font-size:22px;letter-spacing:6px;margin:10px 0}
+</style>
+</head>
+<body>
+<section id="pin" class="card">
+  <h2>متابعة البنات 🔒</h2>
+  <p class="muted tiny" id="pinHint"></p>
+  <input id="pinIn" type="password" inputmode="numeric" autocomplete="off">
+  <button class="btn" id="pinBtn">دخول</button>
+  <div id="pinMsg" class="tiny" style="color:var(--bad);margin-top:6px"></div>
+</section>
+
+<div id="app" class="hide">
+<header><h1>متابعة البنات 👨‍👧‍👧</h1>
+  <nav class="tabs" id="tabs"><button data-t="all" class="on">الكل</button><button data-t="noreen">نورين</button><button data-t="logeen">لوجين</button><button data-t="taleen">تالين</button></nav>
+</header>
+<main>
+  <div id="vAll">
+    <div class="kids" id="kids"></div>
+    <div class="card"><h2>⚠️ محتاج تركيز</h2><div id="weak"></div></div>
+    <div class="card"><h2>آخر النتايج</h2><div id="recent"></div></div>
+    <div class="card"><h2>آخر التحديثات على الأسئلة</h2><div id="upd"></div></div>
+    <div class="card">
+      <h2>إضافة نتيجة من واتساب</h2>
+      <p class="muted tiny" style="margin:0 0 8px">الزق رسالة النتيجة كلها، من أي بنت (MP1- أو LG3- أو TK1-). الصفحة هتعرف هي نتيجة مين، وهتظهر كمان في صفحة البنت.</p>
+      <textarea id="impText"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="impBtn">إضافة النتيجة</button><span id="impMsg" class="tiny"></span></div>
+    </div>
+  </div>
+  <div id="vKid" class="hide"></div>
+</main>
+</div>
+
+<script>
+const D={"noreen":{"key":"mp1","prefix":"MP1","subjects":[{"id":"math","ar":"الرياضيات","icon":"📐"},{"id":"sci","ar":"العلوم","icon":"🔬"},{"id":"eng","ar":"اللغة الإنجليزية","icon":"🔤"},{"id":"arb","ar":"اللغة العربية","icon":"📖"},{"id":"soc","ar":"الدراسات الاجتماعية","icon":"🌍"},{"id":"rel","ar":"التربية الدينية","icon":"🌙"}],"lessons":[{"id":"1-1","code":"1-1","s":"math","ar":"التناسب","plan":"done","n":7},{"id":"1-2","code":"1-2","s":"math","ar":"تطبيقات النسبة والتناسب","plan":"done","n":7},{"id":"1-3","code":"1-3","s":"math","ar":"المجموعات والعمليات عليها","plan":"done","n":7},{"id":"1-4","code":"1-4","s":"math","ar":"العمليات على الأعداد الصحيحة","plan":"done","n":7},{"id":"1-5","code":"1-5","s":"math","ar":"العمليات على الأعداد النسبية","plan":"done","n":7},{"id":"2-1","code":"2-1","s":"math","ar":"المقادير والصيغ الرياضية","plan":"now","n":25},{"id":"2-2","code":"2-2","s":"math","ar":"المعادلات الخطية","plan":"now","n":23},{"id":"3-1","code":"3-1","s":"math","ar":"تنظيم البيانات","plan":"","n":6},{"id":"3-2","code":"3-2","s":"math","ar":"الوسط الحسابي","plan":"","n":7},{"id":"3-3","code":"3-3","s":"math","ar":"القطاعات الدائرية","plan":"","n":7},{"id":"4-1","code":"4-1","s":"math","ar":"أنواع الزوايا والعلاقات بينها","plan":"now","n":12},{"id":"4-2","code":"4-2","s":"math","ar":"التوازي","plan":"now","n":6},{"id":"4-3","code":"4-3","s":"math","ar":"المثلث","plan":"now","n":10},{"id":"4-4","code":"4-4","s":"math","ar":"الأشكال الرباعية","plan":"now","n":9},{"id":"S1-1","code":"1-1","s":"sci","ar":"تركيب الذرة","plan":"done","n":7},{"id":"S1-2","code":"1-2","s":"sci","ar":"الجدول الدوري للعناصر","plan":"done","n":7},{"id":"S1-3","code":"1-3","s":"sci","ar":"المادة وخواصها","plan":"done","n":14},{"id":"S1-4","code":"1-4","s":"sci","ar":"الروابط الكيميائية","plan":"done","n":7},{"id":"S2-1","code":"2-1","s":"sci","ar":"القوى الكهربية","plan":"now","n":7},{"id":"S2-2","code":"2-2","s":"sci","ar":"القوى المغناطيسية","plan":"now","n":7},{"id":"S2-3","code":"2-3","s":"sci","ar":"قوى الجاذبية","plan":"now","n":7},{"id":"S3-1","code":"3-1","s":"sci","ar":"الخلايا والحياة","plan":"now","n":7},{"id":"N-E1","code":"Unit 1","s":"eng","ar":"Life in a Digital World","plan":"done","n":8},{"id":"N-E2","code":"Unit 2","s":"eng","ar":"Learning to Learn","plan":"done","n":8},{"id":"N-E3","code":"Unit 3","s":"eng","ar":"Role Models","plan":"done","n":8},{"id":"N-E4","code":"Unit 4","s":"eng","ar":"Smart Choices","plan":"now","n":8},{"id":"N-A1-1","code":"1-1","s":"arb","ar":"أسطورة مصرية: البطل أحمد المنسي","plan":"done","n":6},{"id":"N-A1-2","code":"1-2","s":"arb","ar":"الفعل اللازم والفعل المتعدي","plan":"done","n":5},{"id":"N-A1-3","code":"1-3","s":"arb","ar":"رسالة إلى المرأة المصرية – الفعل المجرد والمزيد","plan":"done","n":6},{"id":"N-A1-4","code":"1-4","s":"arb","ar":"الهمزة على الألف – نص «وجه الوطن»","plan":"done","n":6},{"id":"N-A2-1","code":"2-1","s":"arb","ar":"أشياء صنعت مني كاتبًا – الأسلوب الخبري والإنشائي","plan":"done","n":6},{"id":"N-A2-2","code":"2-2","s":"arb","ar":"الفعل الصحيح – الهمزة على الواو – السيرة الغيرية","plan":"now","n":7},{"id":"N-A2-3","code":"2-3","s":"arb","ar":"بطولات مصرية – أنواع الفعل المعتل","plan":"","n":5},{"id":"N-S1-1","code":"1-1","s":"soc","ar":"قارة إفريقيا (الموقع والكشوف الجغرافية)","plan":"done","n":6},{"id":"N-S1-2","code":"1-2","s":"soc","ar":"مظاهر سطح قارة إفريقيا","plan":"done","n":6},{"id":"N-S1-3","code":"1-3","s":"soc","ar":"نهر النيل والحضارات القديمة في إفريقيا","plan":"done","n":7},{"id":"N-S2-1","code":"2-1","s":"soc","ar":"عصر الدولة القديمة (بناة الأهرام)","plan":"done","n":6},{"id":"N-S2-2","code":"2-2","s":"soc","ar":"عصر الدولة الوسطى (الرخاء الاقتصادي)","plan":"done","n":6},{"id":"N-S2-3","code":"2-3","s":"soc","ar":"عصر الدولة الحديثة (المجد الحربي)","plan":"done","n":6},{"id":"N-S3-1","code":"3-1","s":"soc","ar":"نظم الغابات في إفريقيا","plan":"done","n":6},{"id":"N-S3-2","code":"3-2","s":"soc","ar":"نظم الحشائش والصحاري الحارة","plan":"now","n":5},{"id":"N-R1-1","code":"1-1","s":"rel","ar":"من أسماء الله الحسنى: المُغيث","plan":"done","n":5},{"id":"N-R1-2","code":"1-2","s":"rel","ar":"سورة التحريم (1–5) وعلم التجويد","plan":"done","n":6},{"id":"N-R1-3","code":"1-3","s":"rel","ar":"صلاة الجنازة","plan":"done","n":5},{"id":"N-R1-4","code":"1-4","s":"rel","ar":"الرسول ﷺ مع الوحي – يوسف في قصر العزيز – دين الرحمة","plan":"done","n":7},{"id":"N-R2-1","code":"2-1","s":"rel","ar":"من أسماء الله الحسنى: الكريم","plan":"done","n":5},{"id":"N-R2-2","code":"2-2","s":"rel","ar":"سورة التحريم (6–12) والحروف الحلقية","plan":"done","n":7},{"id":"N-R2-3","code":"2-3","s":"rel","ar":"رُخَص الإسلام في الطهارة","plan":"done","n":6},{"id":"N-R2-4","code":"2-4","s":"rel","ar":"بيعتا العقبة الأولى والثانية","plan":"now","n":5},{"id":"N-R2-5","code":"2-5","s":"rel","ar":"نبي الله أيوب عليه السلام","plan":"","n":3}],"track":{"results":["MP1-eyJpIjoiYW13ZGp0eHAzOHgxeiIsIm4iOiLZhtmI2LHZitmGIiwibSI6Ikw6UzEtMyIsInMiOiIyMDI2LTExLTEyVDEyOjUzOjM0LjU1MVoiLCJwIjp7IlMxLTMiOlsxLDddfSwidyI6WyJzMzAzIiwiczMwMSIsInMzMDYiLCJzMzA0IiwiczMwMiIsInMzMDciXSwibWkiOjF9"],"levels":{"S1-3":{"lv":1,"upd":1}},"updates":[{"d":"2026-11-12","note":"علوم 1-3 المادة وخواصها: 1/7 (14%) ← فيديو شرح للدرس."},{"d":"2026-11-14","note":"تحديث 1 – علوم 1-3: إضافة 7 أسئلة مركّزة على النقط الضعيفة (أنواع المخاليط وطرق فصلها، العنصر والمركب، أنواع الجزيئات، الخواص الفيزيائية والكيميائية). المستوى: أساسي لحد ما توصل 85%."},{"d":"2026-11-19","note":"تحديث الماث على أسلوب مراجعة نوفمبر (م. فاطمة علي): 71 سؤال جديد بنفس الأنماط وبأرقام مختلفة — مسائل كلامية، مجموعة الحل في N وZ وQ (ومنها ∅)، أسئلة «الأسرع»، و12 سؤال برسومات (زوايا، متوازيين، مثلث، رباعي). اتفتحت الهندسة 4-1 لـ 4-4 لأنها في مقرر نوفمبر."}]},"videos":["S1-3"]},"logeen":{"key":"lg","prefix":"LG3","subjects":[{"id":"math","ar":"الرياضيات","icon":"🔢"},{"id":"eng","ar":"اللغة الإنجليزية","icon":"🔤"},{"id":"arb","ar":"اللغة العربية","icon":"📖"},{"id":"rel","ar":"التربية الدينية","icon":"🌙"}],"lessons":[{"id":"G1","code":"Ch 1","s":"math","ar":"قواعد الضرب","plan":"done","n":5},{"id":"G2","code":"Ch 2","s":"math","ar":"الوقت والمدة","plan":"done","n":5},{"id":"G3","code":"Ch 3","s":"math","ar":"القسمة","plan":"done","n":5},{"id":"G4","code":"Ch 4","s":"math","ar":"الجمع والطرح","plan":"","n":5},{"id":"G5","code":"Ch 5","s":"math","ar":"الطول","plan":"","n":5},{"id":"G6","code":"Ch 6","s":"math","ar":"تنظيم البيانات","plan":"","n":5},{"id":"G7","code":"Ch 7","s":"math","ar":"الحساب الذهني","plan":"","n":5},{"id":"G8","code":"Ch 8","s":"math","ar":"القسمة بباقي","plan":"","n":5},{"id":"G9","code":"Ch 9","s":"math","ar":"الأعداد الأكبر من 10,000","plan":"","n":5},{"id":"G10","code":"Ch 10","s":"math","ar":"الضرب الرأسي","plan":"","n":5},{"id":"E1","code":"Unit 1","s":"eng","ar":"Let's Learn Together","plan":"done","n":12},{"id":"E2","code":"Unit 2","s":"eng","ar":"My Family and I","plan":"done","n":16},{"id":"E3","code":"Unit 3","s":"eng","ar":"New Adventures","plan":"done","n":6},{"id":"E4","code":"Unit 4","s":"eng","ar":"Let's Tell Stories","plan":"done","n":6},{"id":"E5","code":"Unit 5","s":"eng","ar":"Together Is Better (Lessons 1–2)","plan":"now","n":6},{"id":"LA1","code":"1-1","s":"arb","ar":"من فضلك.. كرر المحاولة","plan":"done","n":9},{"id":"LA2","code":"1-2","s":"arb","ar":"أدوات الاستفهام (من – ما – هل – لماذا)","plan":"done","n":10},{"id":"LA3","code":"1-3","s":"arb","ar":"البطل الخفي – هؤلاء وأولئك","plan":"done","n":12},{"id":"LA4","code":"1-4","s":"arb","ar":"نشيد: أسرار النجاح","plan":"done","n":9},{"id":"LA5","code":"2-1","s":"arb","ar":"السعادة في المساعدة","plan":"now","n":6},{"id":"LA6","code":"2-2","s":"arb","ar":"المفرد – المثنى – الجمع","plan":"now","n":6},{"id":"LA7","code":"2-3","s":"arb","ar":"أول من رفع يده – النفي (لم – لن)","plan":"now","n":7},{"id":"LA8","code":"2-4","s":"arb","ar":"نشيد: أخلاقنا","plan":"now","n":4},{"id":"LA9","code":"3-1","s":"arb","ar":"صندوق الابتكار – حروف الجر (عن – على)","plan":"","n":6},{"id":"LR1","code":"1-1","s":"rel","ar":"أركان الإيمان","plan":"done","n":4},{"id":"LR2","code":"1-2","s":"rel","ar":"سورة الغاشية","plan":"done","n":4},{"id":"LR3","code":"1-3","s":"rel","ar":"صلاة الجمعة","plan":"done","n":4},{"id":"LR4","code":"1-4","s":"rel","ar":"عام الحزن","plan":"done","n":4},{"id":"LR5","code":"1-5","s":"rel","ar":"نبي الله زكريا ومريم","plan":"done","n":4},{"id":"LR6","code":"1-6","s":"rel","ar":"الثقة بالله","plan":"done","n":3},{"id":"LR7","code":"2-1","s":"rel","ar":"الإسلام والإيمان","plan":"now","n":4},{"id":"LR8","code":"2-2","s":"rel","ar":"سورة الأعلى","plan":"now","n":4},{"id":"LR9","code":"2-3","s":"rel","ar":"صلاة العيدين","plan":"now","n":6},{"id":"LR10","code":"2-4","s":"rel","ar":"رحلة النبي ﷺ إلى الطائف","plan":"now","n":4},{"id":"LR11","code":"2-5","s":"rel","ar":"نبي الله عيسى","plan":"now","n":4},{"id":"LR12","code":"2-6","s":"rel","ar":"المحبة","plan":"now","n":3},{"id":"LR13","code":"3-1","s":"rel","ar":"الإيمان بالله","plan":"","n":3},{"id":"LR14","code":"3-2","s":"rel","ar":"سورة الطارق","plan":"","n":3},{"id":"LR15","code":"3-3","s":"rel","ar":"شروط صحة الصلاة","plan":"","n":5},{"id":"LR16","code":"3-4","s":"rel","ar":"الإسراء والمعراج","plan":"","n":4},{"id":"LR17","code":"3-5","s":"rel","ar":"أبو بكر الصديق","plan":"","n":5}],"track":{"results":["LG3-eyJpIjoiYW13Z3A5YWY4Ymp3bSIsIm4iOiLZhNmI2KzZitmGIiwibSI6Ikw6RTEiLCJzIjoiMjAyNi0xMS0xNFQxNzo0ODo0Ny40OTJaIiwicCI6eyJFMSI6WzQsNl19LCJ3IjpbImUxMDEiLCJlMTA0Il0sIm1pIjo1fQ","LG3-eyJpIjoiYW13Z3BqYngwZXdsaiIsIm4iOiLZhNmI2KzZitmGIiwibSI6Ikw6RTIiLCJzIjoiMjAyNi0xMS0xNFQxNzo1NjozNS45ODhaIiwicCI6eyJFMiI6WzYsNl19LCJ3IjpbXSwibWkiOjZ9","LG3-eyJpIjoiYW13aWNmNnc0Y2IzYiIsIm4iOiLZhNmI2KzZitmGIiwibSI6ImFyYjp1MSIsInMiOiIyMDI2LTExLTE1VDIxOjI1OjAwLjE5NloiLCJwIjp7IkxBMSI6WzUsNV0sIkxBMiI6WzUsNV0sIkxBMyI6WzYsNl0sIkxBNCI6WzUsNV19LCJ3IjpbXSwibWkiOjEzfQ"],"levels":{"E1":{"lv":1,"upd":1},"E2":{"lv":2,"upd":1},"LA1":{"lv":2,"upd":1},"LA2":{"lv":2,"upd":1},"LA3":{"lv":2,"upd":1},"LA4":{"lv":2,"upd":1}},"updates":[{"d":"2026-11-14","note":"إنجليزي Unit 1: 4/6 (67%) – غلطت في التحيات (Good morning) والمضارع البسيط مع he/she."},{"d":"2026-11-14","note":"تحديث 1 – إنجليزي Unit 1: إضافة 6 أسئلة مركّزة (3 على التحيات، 3 على إضافة s مع he/she). المستوى: أساسي لحد ما توصل 85%."},{"d":"2026-11-14","note":"فتح مادتين جديدتين حسب خطة الدراسة: العربي (50 سؤال، الوحدات 1–3 لحد مقرر نوفمبر) والدين (68 سؤال، لحد درس أبو بكر الصديق)."},{"d":"2026-11-14","note":"إنجليزي Unit 2: 6/6 (100%) ← تحديث 1: طلع للمستوى 2 (متوسط). اتضافت 10 أسئلة أصعب على العيلة والمهن، وhis/her، والحروف الكبيرة وعلامة الاستفهام، وph وx."},{"d":"2026-11-16","note":"عربي امتحان الوحدة 1: 21/21 (100%) ← تحديث 1: دروس الوحدة الأولى الأربعة طلعت للمستوى 2 (متوسط). اتضافت 19 سؤال أصعب: فهم أعمق للقصص، اختيار أداة الاستفهام من الإجابة، أسماء الإشارة للمفرد والجمع والقريب والبعيد، ومعاني ومضادات وجموع جديدة."}]},"videos":[]},"taleen":{"key":"tk","prefix":"TK1","subjects":[{"id":"ar","ar":"العربي","icon":"🔤"},{"id":"en","ar":"English","icon":"🔠"},{"id":"math","ar":"الرياضيات","icon":"🔢"},{"id":"disc","ar":"اكتشف","icon":"🎨"}],"lessons":[{"id":"AR1","code":"","s":"ar","ar":"اسمعي واختاري الحرف","plan":"","n":0},{"id":"AR2","code":"","s":"ar","ar":"الصورة بتبدأ بأنهي حرف؟","plan":"","n":0},{"id":"AR3","code":"","s":"ar","ar":"فين صورة الحرف؟","plan":"","n":0},{"id":"EN1","code":"","s":"en","ar":"اسمعي واختاري الحرف","plan":"","n":0},{"id":"EN2","code":"","s":"en","ar":"الصورة بتبدأ بأنهي حرف؟","plan":"","n":0},{"id":"EN3","code":"","s":"en","ar":"فين صورة الحرف؟","plan":"","n":0},{"id":"EN4","code":"","s":"en","ar":"الحرف الكبير والصغير","plan":"","n":0},{"id":"M1","code":"","s":"math","ar":"عدّي واختاري الرقم","plan":"","n":0},{"id":"M2","code":"","s":"math","ar":"اسمعي واختاري الرقم","plan":"","n":0},{"id":"M3","code":"","s":"math","ar":"أنهي أكتر؟","plan":"","n":0},{"id":"M4","code":"","s":"math","ar":"إيه الرقم اللي بعده؟","plan":"","n":0},{"id":"D1","code":"","s":"disc","ar":"الألوان","plan":"","n":0},{"id":"D2","code":"","s":"disc","ar":"الأشكال","plan":"","n":0}],"track":{"results":["TK1-eyJpIjoiYW13bnFlOGIxam92aCIsIm0iOiJNMyIsInMiOiIyMDI2LTExLTE5VDE1OjU1OjAwLjg3N1oiLCJwIjp7Ik0zIjpbOCw4XX0sInciOltdLCJtaSI6Mn0","TK1-eyJpIjoiYW13bnFwOGU5aXdmcSIsIm0iOiJNMSIsInMiOiIyMDI2LTExLTE5VDE2OjAzOjM0LjIwOVoiLCJwIjp7Ik0xIjpbNiw4XX0sInciOlsiTTE6NyIsIk0xOjYiXSwibWkiOjF9"],"levels":{"M3":{"lv":2,"upd":1},"M1":{"lv":1,"upd":1}},"focus":{"M1":[6,7]},"updates":[{"d":"2026-11-19","note":"فتح صفحة تالين (KG1 لغات): عربي (الحروف أ–ز)، English (A–J)، رياضيات (أرقام 1–10)، اكتشف (الألوان والأشكال). كل الألعاب بتبدأ من المستوى 1، وبتنطق السؤال بصوت عشان تالين لسه مبتقراش."},{"d":"2026-11-19","note":"رياضيات «أنهي أكتر؟»: 8/8 (100%) ← تحديث 1: طلعت للمستوى 2. الأعداد لحد 10 بدل 5، والمجموعتين قريبين من بعض (الفرق 1–3) فلازم تعد كويس، وأسئلة جديدة «Which has fewer?» (أنهي أقل؟)."},{"d":"2026-11-20","note":"«عدّي واختاري الرقم»: 6/8 (75%) – غلطت في 6 و 7 ← تحديث: نص أسئلة اللعبة بقت على عدّ 6 و 7 لحد ما تتقنهم. المستوى زي ما هو لحد 3 نجوم."}]},"videos":[]}};
+const KIDS=[
+ {id:'noreen',name:'نورين',grade:'أولى إعدادي لغات',url:'../',c:'var(--n)'},
+ {id:'logeen',name:'لوجين',grade:'تالتة ابتدائي',url:'../logeen/',c:'var(--l)'},
+ {id:'taleen',name:'تالين',grade:'KG1',url:'../taleen/',c:'var(--t)'}
+];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const lvc=p=>p>=85?'ok':p>=60?'mid':'bad';
+const LN=['','أساسي','متوسط','متقدم','مراوغة','تفوق'];
+const fmt=iso=>{try{return new Date(iso).toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return iso}};
+const day=iso=>{try{return new Date(iso).toLocaleDateString('ar-EG',{day:'numeric',month:'short'})}catch(e){return iso}};
+KIDS.forEach(k=>{const d=D[k.id];k.d=d;k.LMAP=Object.fromEntries(d.lessons.map(l=>[l.id,l]));k.SMAP=Object.fromEntries(d.subjects.map(s=>[s.id,s]));});
+const K=Object.fromEntries(KIDS.map(k=>[k.id,k]));
+
+function b64d(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s);return new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0)));}
+// decode a WhatsApp code into the same shape the girl's own page stores
+function decode(k,text){const m=String(text).match(new RegExp(k.d.prefix+'-([A-Za-z0-9_-]+)'));if(!m)return null;
+  const o=JSON.parse(b64d(m[1]));const per={};let c=0,t=0;
+  Object.entries(o.p||{}).forEach(([id,v])=>{if(!k.LMAP[id]||!Array.isArray(v))return;const tt=Math.max(0,+v[1]||0),cc=Math.max(0,Math.min(+v[0]||0,tt));per[id]={c:cc,t:tt};c+=cc;t+=tt;});
+  if(!t)return null;
+  const id=String(o.i||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,40)||('a'+Date.now().toString(36));
+  const ts=isNaN(Date.parse(o.s))?new Date().toISOString():new Date(o.s).toISOString();
+  const w=(o.w||[]).filter(x=>typeof x==='string').slice(0,60);
+  const a={id,mode:String(o.m||''),ts,total:t,correct:c,pct:Math.round(c/t*100),perLesson:per,minutes:+o.mi||null};
+  if(k.id==='taleen')a.wrong=w;else{a.name=String(o.n||'').slice(0,40);a.wrong=w.map(x=>({id:x,ans:''}));a.via='whatsapp';}
+  return a;}
+function attemptsOf(k){const loc=LS.get(k.d.key+'_attempts',[]);const base=(k.d.track.results||[]).map(c=>{try{return decode(k,c)}catch(e){return null}}).filter(Boolean);
+  return [...loc,...base.filter(b=>!loc.some(a=>a.id===b.id))].sort((x,y)=>x.ts<y.ts?-1:1);}
+function modeName(k,m){m=String(m||'');
+  if(k.id==='taleen'){if(m.startsWith('ALL:')){const s=k.SMAP[m.slice(4)];return (s?s.ar:'')+' · التحدي الكبير';}const l=k.LMAP[m];return l?k.SMAP[l.s].ar+' · '+l.ar:m;}
+  if(m==='all'||m==='u1'||m==='u2')m='math:'+m;
+  if(m.startsWith('L:')){const l=k.LMAP[m.slice(2)];return l?`${k.SMAP[l.s].ar} · تدريب <span class="code">${esc(l.code)}</span> ${esc(l.ar)}`:'تدريب';}
+  const [sj,part]=m.split(':');const x=k.SMAP[sj];if(!x)return esc(m);
+  return esc(x.ar)+' · '+(part==='all'?'امتحان شامل':'امتحان الوحدة '+esc((part||'').slice(1)));}
+function lname(k,l){return (l.code?`<span class="code">${esc(l.code)}</span> · `:'')+esc(l.ar);}
+// latest % per lesson, with first % and count
+function hist(all){const h={};all.forEach(a=>Object.entries(a.perLesson||{}).forEach(([id,x])=>{if(x.t)(h[id]=h[id]||[]).push(Math.round(x.c/x.t*100));}));return h;}
+
+function summary(k){const all=attemptsOf(k),h=hist(all),ids=Object.keys(h);
+  const lasts=ids.map(id=>h[id][h[id].length-1]);
+  return {all,h,avg:lasts.length?Math.round(lasts.reduce((a,b)=>a+b,0)/lasts.length):null,
+    weak:ids.filter(id=>h[id][h[id].length-1]<85).map(id=>({k,l:k.LMAP[id],p:h[id][h[id].length-1],n:h[id].length})).filter(x=>x.l),
+    last:all[all.length-1]};}
+
+function renderAll(){
+  const S=KIDS.map(k=>[k,summary(k)]);
+  $('#kids').innerHTML=S.map(([k,s])=>`<div class="kid" style="--c:${k.c}" data-go="${k.id}"><div class="nm">${k.name}</div><div class="gr">${k.grade}</div>
+    <div class="stats"><div class="stat"><b>${s.all.length}</b><span>اختبار</span></div><div class="stat"><b style="color:var(--${s.avg==null?'muted':lvc(s.avg)})">${s.avg==null?'–':s.avg+'%'}</b><span>متوسط آخر نتيجة</span></div><div class="stat"><b style="color:var(--${s.weak.length?'bad':'ok'})">${s.weak.length}</b><span>محتاج تركيز</span></div></div>
+    <div class="tiny muted" style="margin-top:8px">${s.last?'آخر اختبار '+day(s.last.ts)+': <span class="pill '+lvc(s.last.pct)+'">'+s.last.pct+'%</span>':'لسه مفيش اختبارات'}</div></div>`).join('');
+  document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>tab(e.dataset.go));
+  const weak=S.flatMap(([k,s])=>s.weak).sort((a,b)=>a.p-b.p);
+  $('#weak').innerHTML=weak.length?weak.map(w=>`<div class="item"><div class="t"><span class="who" style="--c:${w.k.c}">${w.k.name}</span> ${esc(w.k.SMAP[w.l.s].ar)} · ${lname(w.k,w.l)}<small>${w.n} ${w.n===1?'محاولة':'محاولات'} · مستوى ${(((w.k.d.track.levels||{})[w.l.id])||{}).lv||1}</small></div><span class="pill ${lvc(w.p)}">${w.p}%</span></div>`).join(''):'<p class="muted" style="margin:0">مفيش دروس تحت 85% دلوقتي 👏</p>';
+  const rec=S.flatMap(([k,s])=>s.all.map(a=>({k,a}))).sort((x,y)=>x.a.ts<y.a.ts?1:-1).slice(0,12);
+  $('#recent').innerHTML=rec.length?rec.map(({k,a})=>`<div class="item"><div class="t"><span class="who" style="--c:${k.c}">${k.name}</span> ${modeName(k,a.mode)}<small>${fmt(a.ts)}</small></div><span class="pill ${lvc(a.pct)}">${a.correct}/${a.total} · ${a.pct}%</span></div>`).join(''):'<p class="muted">لسه مفيش نتايج.</p>';
+  const up=KIDS.flatMap(k=>(k.d.track.updates||[]).map((u,i)=>({k,u,i}))).sort((x,y)=>x.u.d<y.u.d?1:x.u.d>y.u.d?-1:y.i-x.i).slice(0,8);
+  $('#upd').innerHTML=up.map(({k,u})=>`<div class="item" style="align-items:flex-start"><div class="t"><span class="who" style="--c:${k.c}">${k.name}</span> <span class="tiny muted">${esc(u.d)}</span><div class="tiny">${esc(u.note)}</div></div></div>`).join('')+'<p class="tiny muted" style="margin:8px 0 0">السجل الكامل لكل بنت في صفحتها هنا فوق.</p>';
+}
+
+function renderKid(k){const s=summary(k),lv=k.d.track.levels||{};
+  const tried=k.d.lessons.filter(l=>s.h[l.id]),rest=k.d.lessons.filter(l=>!s.h[l.id]);
+  const row=l=>{const h=s.h[l.id],p=h[h.length-1],d=p-h[0];return `<div class="item"><div class="t">${lname(k,l)}<small>${h.length} ${h.length===1?'محاولة':'محاولات'} · مستوى ${(lv[l.id]||{}).lv||1}${h.length>1?` · <span style="color:var(--${d>0?'ok':d<0?'bad':'muted'})">${d>0?'▲ +':d<0?'▼ ':'= '}${d}</span>`:''}</small></div><div class="row"><div class="bar ${lvc(p)}"><i style="width:${p}%"></i></div><span class="pill ${lvc(p)}">${p}%</span></div></div>`;};
+  const bySubj=(list,fn)=>k.d.subjects.map(sb=>{const ls=list.filter(l=>l.s===sb.id);return ls.length?`<div class="subj">${sb.icon} ${esc(sb.ar)}</div>`+ls.map(fn).join(''):'';}).join('');
+  const plan=Object.keys(lv).filter(id=>k.LMAP[id]).map(id=>{const l=k.LMAP[id];return `<tr><td>${esc(k.SMAP[l.s].ar)} · ${lname(k,l)}</td><td class="n">${lv[id].lv||1} <span class="tiny muted">${LN[lv[id].lv||1]||''}</span></td><td class="n">${lv[id].upd||0}</td></tr>`}).join('');
+  const now=k.d.lessons.filter(l=>l.plan==='now');
+  $('#vKid').innerHTML=`
+   <div class="card" style="border-top:5px solid ${k.c}"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0">${k.name}</h2><div class="tiny muted">${k.grade}</div></div><a class="btn ghost" href="${k.url}">افتح صفحة ${k.name}</a></div>
+    <div class="stats"><div class="stat"><b>${s.all.length}</b><span>اختبار</span></div><div class="stat"><b>${tried.length}/${k.d.lessons.length}</b><span>دروس اتجربت</span></div><div class="stat"><b style="color:var(--${s.avg==null?'muted':lvc(s.avg)})">${s.avg==null?'–':s.avg+'%'}</b><span>المتوسط</span></div></div></div>
+   <div class="card"><h2>مستوى الدروس</h2>${tried.length?bySubj(tried,row):'<p class="muted" style="margin:0">لسه محلّتش أي اختبار.</p>'}
+    ${rest.length?`<details><summary>دروس لسه متجربتش (${rest.length})</summary>${bySubj(rest,l=>`<div class="item"><div class="t">${lname(k,l)}${l.plan==='now'?' <span class="pill mid">مقرر دلوقتي</span>':''}</div><span class="pill">لسه</span></div>`)}</details>`:''}</div>
+   ${now.length?`<div class="card"><h2>📅 مقرر دلوقتي حسب الخطة</h2>${bySubj(now,l=>`<div class="item"><div class="t">${lname(k,l)}</div>${s.h[l.id]?`<span class="pill ${lvc(s.h[l.id][s.h[l.id].length-1])}">${s.h[l.id][s.h[l.id].length-1]}%</span>`:'<span class="pill">لسه</span>'}</div>`)}</div>`:''}
+   <div class="card"><h2>خطة التطوير 📈</h2>${plan?`<table><tr><th>الدرس</th><th>المستوى</th><th>تحديثات</th></tr>${plan}</table>`:'<p class="muted" style="margin:0">لسه مفيش تحديثات مستوى.</p>'}
+    <h3>سجل التحديثات</h3>${(k.d.track.updates||[]).slice().reverse().map(u=>`<div class="item" style="align-items:flex-start"><div class="t"><span class="pill">${esc(u.d)}</span> <span class="tiny">${esc(u.note)}</span></div></div>`).join('')||'<p class="muted">لسه.</p>'}</div>
+   <div class="card"><h2>كل الاختبارات</h2>${s.all.length?s.all.slice().reverse().map(a=>`<details><summary style="color:var(--ink);font-weight:600"><span class="pill ${lvc(a.pct)}">${a.correct}/${a.total} · ${a.pct}%</span> ${modeName(k,a.mode)} <span class="tiny muted">${fmt(a.ts)}</span></summary><table>${Object.entries(a.perLesson).map(([id,x])=>{const l=k.LMAP[id],p=Math.round(x.c/x.t*100);return `<tr><td>${l?lname(k,l):esc(id)}</td><td class="n">${x.c}/${x.t}</td><td class="n"><span class="pill ${lvc(p)}">${p}%</span></td></tr>`}).join('')}</table></details>`).join(''):'<p class="muted" style="margin:0">لسه.</p>'}</div>`;
+}
+
+function tab(t){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('#vAll').classList.toggle('hide',t!=='all');$('#vKid').classList.toggle('hide',t==='all');
+  if(t==='all')renderAll();else renderKid(K[t]);window.scrollTo(0,0);}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+
+$('#impBtn').onclick=()=>{const m=$('#impMsg'),txt=$('#impText').value;let k=null,a=null;
+  for(const x of KIDS){try{a=decode(x,txt)}catch(e){a=null}if(a){k=x;break;}}
+  if(!a){m.style.color='var(--bad)';m.textContent='مش لاقي كود نتيجة صحيح. اتأكد إنك لزقت الرسالة كلها.';return;}
+  const key=k.d.key+'_attempts',loc=LS.get(key,[]);
+  if(attemptsOf(k).some(x=>x.id===a.id)){m.style.color='var(--mid)';m.textContent=`نتيجة ${k.name} دي متضافة قبل كده.`;return;}
+  loc.push(a);LS.set(key,loc);m.style.color='var(--ok)';m.textContent=`✓ اتضافت نتيجة ${k.name}: ${a.correct}/${a.total}`;$('#impText').value='';renderAll();};
+
+async function sha(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('prep1:'+t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){return 'x'+t;}}
+const has=!!LS.get('mp1_pin',null);
+$('#pinHint').textContent=has?'اكتب الرقم السري (نفس رقم صفحات البنات).':'أول مرة: اختار رقم سري (4 أرقام أو أكتر).';
+async function tryPin(){const v=$('#pinIn').value.trim();if(!/^\d{4,8}$/.test(v)){$('#pinMsg').textContent='اكتب من 4 لـ 8 أرقام';return;}
+  const h=await sha(v),saved=LS.get('mp1_pin',null);if(!saved)LS.set('mp1_pin',h);else if(saved!==h){$('#pinMsg').textContent='الرقم غلط';return;}
+  $('#pin').classList.add('hide');$('#app').classList.remove('hide');tab('all');}
+$('#pinBtn').onclick=tryPin;$('#pinIn').onkeydown=e=>{if(e.key==='Enter')tryPin();};
+setTimeout(()=>$('#pinIn').focus(),50);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
